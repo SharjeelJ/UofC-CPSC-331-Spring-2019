@@ -530,8 +530,9 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void addLeaf(E key, TwoThreeNode x)
     {
-        System.out.println(x.numberChildren());
-        System.out.println(x.element());
+        //        System.out.println("PRINT: " + ((root() == null) ? "null" : root().toString()));
+        //        System.out.println(x.numberChildren());
+        //        System.out.println(x.element());
 
         x.thirdChild = new TwoThreeNode();
         x.thirdChild().element = key;
