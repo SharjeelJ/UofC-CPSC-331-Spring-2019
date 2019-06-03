@@ -1,0 +1,296 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\title{Assignment 1}
+\author{Martha Ibarra 30003129
+\\
+Sharjeel Junaid 30008424
+\\
+Dheeraj Kumar 30011439
+}
+\date{May 2019}
+
+\begin{document}
+
+    \maketitle
+
+    \section{: The Bound Function}
+    To prove that
+    \textbf{f(n) = n is the bound function for the recursive algorithm sGrin}
+    we must prove 3 things: \textbf{(1)} That this is an integer valued function. \textbf{(2)} That the value of the function decreases by at least 1 when recursively called \textbf{(3)} That when n $\leq$ 0 , the algorithm does not recursively call itself.
+    \\
+    \\ \textit{ The proof then continues as follows: }
+    \\
+    \textbf{1.} The pre-condition of this algorithm states that n is a non-negative integer that is given as input. Through this we can see that the iput n is always a non-negative integer. Therefore, this function is an integer valued function.
+    \\
+    \textbf{2.} By inspection of the code, we can see that when the algorithm calls itself recursively in lines 10 and 11, it decreases the value of n by at least 1, each time. Therefore, this property holds.
+    \\
+    \textbf{3.} From the pre-condition, we know that n cannot be negative. So only the case where n=0 needs to be investigated further. By inspection of the code, when n = 0, the algorithm goes from line 1 to line 2 in which the value 1 is then returned. It is evident then that the algorithm does not call itself recursively when n = 0 and this property holds as well.
+    \\
+    \\\textbf{Thus, since all 3 properties hold, we can conclude that f(n) = n is a bound function for this algorithm.}
+    \\
+    \\Reference: Lecture 2 Slides 24-28
+
+
+    \section{: Proof of Correctness for sGrin}
+    \textbf{Claim:} The program sGrin takes a non-negative integer n as input and returns the $n^{th}$ Grindelwald number $G_{n}$ as output. We will prove this by using strong induction on n, and the cases n= 0, 1, 2, and 3 will be considered the basis.
+    \\
+    \\\textbf{Basis:} By inspection of the code, we prove that the precondition and post condition are met for these base cases.
+    \\
+    \\Suppose n=0, we initialize the program and move forward to line 1 where the test succeeds and move forward to line 2. Here the return statement is executed, the function terminates and returns the value of $G_{0}$ = 1 as an output. Hence satisfying the post condition.
+    \\
+    \\Suppose n=1, the test at line 1 fails and moves forward to line 3 where the test is successful and the program executes line 4. The function terminates and returns $G_{1}$  = 2 as output. Thus satisfying the post condition.
+    \\
+    \\Suppose n=2, the test at lines 1 and 3 fail, moving forward to line 5 where the test is successful and the program executes line 6. The function terminates and returns $G_{2}$ = 3 as output. Hence satisfying the post condition.
+    \\
+    \\Suppose n=3, then the tests at lines 1,3 and 5 fail moving forward to line 7 where the test is successful and the program executes line 8. the function terminates and returns $G_{3}$ = 4 as output, satisfying the post condition.
+    \\
+    \\\textbf{Inductive Step:}
+    \\Let k be an integer such that k $\geq$ 3. The following inductive hypothesis will be used to prove the inductive claim:
+    \\
+    \\
+    \textbf{Inductive Hypothesis:}
+    \\ Let n be an integer such that 0 $\leq$ n $\leq$ k. If the algorithm sGrin is executed with n as an input, the algorithm will eventually terminate and return the $n^{th}$ Grindelwald number, $G_{n}$ as output.
+    \\\textbf{Inductive Claim:}
+    \\If the algorithm sGrin is executed with n = k+1 as input, the execution of the algorithm will eventually end, returning the $n^{k+1}$ Grindelwald number $G_{k+1}$ = $G_{n}$ as output.
+    \\\\Now suppose the sGrin algorithm is executed with n = k+1 as input. As stated in the inductive step, k $\geq$ 3. and since n = k+1, n $\geq$ 4.
+    \\With that noted, a simple trace of the execution of the algorithm with the input n proceeds as follows:
+    \\Since  n $\geq$ 4, the test execution on line 1 fails and the algorithm proceeds to line 3. Here, the test execution also fails and the algorithm proceeds to line 5 where the test fails again and the algorithm proceeds to line 7 where the test fails one more time. The algorithm now proceeds to line 9.
+    As this trace continues, we must now split the trace into 2 separate cases:
+    \\
+    \textbf{Case 1:} n is \textit{even} hereby passing the test on line 9 and proceeding to line 10.
+    \\Line 10 now has 3 recursive calls.The first recursive call takes n-1 as input. Recall that in this trace n = k+1 so \textbf{n-1 = k}. By the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-1)^{th}$ Grindelwald number, $G_{n-1}$ = $G_{k}$ as output.
+    \\For the next 2 recursive calls, n-3 and n-4 are used as inputs.
+    \\For sGrin(n-3): Since \textbf{n = k+1 $\geq$ 4 0 $\leq$ n-3 $\leq$ k-2 $\leq$ k} by the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-3)^{th}$ Grindelwald number, $G_{n-3}$ =  $G_{k-2}$ as output.
+    \\For sGrin(n-4): Since \textbf{n = k+1 $\geq$ 4 0 $\leq$ n-4 $\leq$ k-3 $\leq$ k} by the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-4)^{th}$ Grindelwald number, $G_{n-4}$ =  $G_{k-3}$ as output.
+    \\The above now proves that the algorithm terminates, this proves the first part of the inductive claim. Now, by inspection of the code in line 10 we see that the value returned as output is:\\
+    $2G_{n-1}$  - $2G_{n-3}$ + $G_{n-4}$ = $G_{n}$ ( now we sub in k+1 for n)
+    \\ $2G_{k}$  - $2G_{k-2}$ + $G_{k-3}$ = $G_{k+1}$
+    \\ And the above output then satisfies the second part of the inductive claim, \textbf{hereby proving the inductive claim.}
+    \\
+    \\\textbf{Case 2:} n is \textit{odd} hereby failing the test on line 9 and proceeding to line 11.
+    \\Line 11 has 4 recursive calls. The first recursive call takes n-1 as input. Recall that in this trace n = k+1 so \textbf{n-1 = k}. By the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-1)^{th}$ Grindelwald number, $G_{n-1}$ = $G_{k}$ as output.
+    \\For the next 3 recursive calls, n-2, n-3 and n-4 are used as inputs.
+    \\For sGrin(n-2): Since \textbf{n = k+1 $\geq$ 4 0 $\leq$ n-2 $\leq$ k-1 $\leq$ k} by the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-2)^{th}$ Grindelwald number, $G_{n-2}$ =  $G_{k-1}$ as output.
+    \\For sGrin(n-3): Since \textbf{n = k+1 $\geq$ 4 0 $\leq$ n-3 $\leq$ k-2 $\leq$ k} by the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-3)^{th}$ Grindelwald number, $G_{n-3}$ =  $G_{k-2}$ as output.
+    \\For sGrin(n-4): Since \textbf{n = k+1 $\geq$ 4 0 $\leq$ n-4 $\leq$ k-3 $\leq$ k} by the \textit{inductive hypothesis: }the algorithm will eventually terminate and return the $(n-4)^{th}$ Grindelwald number, $G_{n-4}$ =  $G_{k-3}$ as output.
+    \\The above now proves that the algorithm terminates, this proves the first part of the inductive claim. Now, by inspection of the code in line 10 we see that the value returned as output is:\\
+    $G_{n-1}$  + $3G_{n-2}$ - $5G_{n-3}$ + $2G_{n-4}$ = $G_{n}$ ( now we sub in k+1 for n)
+    \\$G_{k}$  + $3G_{k-1}$ - $5G_{k-2}$ + $2G_{k-3}$ = $G_{k+1}$
+    \\ And the above output then satisfies the second part of the inductive claim, \textbf{hereby proving the inductive claim.}
+    \\
+    \\Reference: Lecture 2 Slides 7-22
+
+
+    \section{: SGrindelwald Program} \textit{See java file}
+
+    \\Reference: Assignment #1 Page
+    \\Reference: Tutorial 4 Exercise 8
+
+    \section{: Recurrence for $T_{sGrin}(n)$}
+
+    \[T_{sGrin}(n)
+    \begin{cases}
+        2 & n=0 \\
+        3 & n=1\\
+        4 & n=2\\
+        5 & n=3\\
+        6 + T_{sGrin}(n-1) +T_{sGrin}(n-3)+T_{sGrin}(n-4) & \text{for even n and $n\geq 4$ } \\
+        6 + T_{sGrin}(n-1) +T_{sGrin}(n-2) +T_{sGrin}(n-3)+T_{sGrin}(n-4) &  \text{for odd n and $n\geq 4$ } \\
+    \end{cases}\]
+
+    \\ Reference: Lecture 5 slides 4-30
+
+
+    \section{: $T_{sGrin}(n) \geq (\frac{3}{2})^n$ proof}
+    \textbf{Want to Prove:}
+    \\\indent\indent$T_{\text { sGrin }}(\mathrm{n}) \geq\left(\frac{3}{2}\right)^{\mathrm{n}}$
+    \\\textbf{Base Case:}
+    \\\indent\indent$n=0$:
+    \\\indent\indent\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(0) \geq\left(\frac{3}{2}\right)^{0}$
+    \\\indent\indent\indent\indent$2 \geq 1$
+    \\\indent\indent$n=1$:
+    \\\indent\indent\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(1) \geq\left(\frac{3}{2}\right)^{1}$
+    \\\indent\indent\indent\indent$3 \geq \frac{3}{2}$
+    \\\indent\indent$n=2$:
+    \\\indent\indent\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(2) \geq\left(\frac{3}{2}\right)^{2}$
+    \\\indent\indent\indent\indent$4 \geq \frac{9}{4}$
+    \\\indent\indent$n=3$:
+    \\\indent\indent\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(3) \geq\left(\frac{3}{2}\right)^{3}$
+    \\\indent\indent\indent\indent$5 \geq \frac{27}{8}$
+    \\\textbf{Inductive Hypothesis:}
+    \\\indent\indent$T_{\text { sGrin }}(\mathrm{m}) \geq\left(\frac{3}{2}\right)^{\mathrm{m}}$ such that $0 \leq \mathrm{m} \leq \mathrm{k}$, where $\mathrm{k} \geq 3$ and $\mathrm{k}+1 \geq 4$
+    \\\textbf{If k is even:}
+    \\\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(k)=6+\mathrm{T}_{\mathrm{sGrin}}(k-1)+\mathrm{T}_{\mathrm{sGrin}}(k-3)+\mathrm{T}_{\mathrm{sGrin}}(k-4)$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}-1}+\left(\frac{3}{2}\right)^{\mathrm{k}-3}+\left(\frac{3}{2}\right)^{\mathrm{k}-4}(\mathrm{IH})$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\left(\frac{3}{2}\right)^{-1}+\left(\frac{3}{2}\right)^{-3}+\left(\frac{3}{2}\right)^{-4}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\left(\frac{2}{3}\right)^{1}+\left(\frac{2}{3}\right)^{3}+\left(\frac{2}{3}\right)^{4}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\frac{2}{3}+\frac{8}{27}+\frac{16}{81}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\frac{94}{81}\right] \geq\left(\frac{3}{2}\right)^{\mathrm{k}}$
+    \\\textbf{If k is odd:}
+    \\\indent\indent$\mathrm{T}_{\mathrm{sGrin}}(k)=6+\mathrm{T}_{\mathrm{sGrin}}(k-1)+\mathrm{T}_{\mathrm{sGrin}}(k-2)+\mathrm{T}_{\mathrm{sGrin}}(k-3)+\mathrm{T}_{\mathrm{sGrin}}(k-4)$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}-1}+\left(\frac{3}{2}\right)^{\mathrm{k}-2}+\left(\frac{3}{2}\right)^{\mathrm{k}-3}+\left(\frac{3}{2}\right)^{\mathrm{k}-4}(\mathrm{IH})$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\left(\frac{3}{2}\right)^{-1}+\left(\frac{3}{2}\right)^{-2}+\left(\frac{3}{2}\right)^{-3}+\left(\frac{3}{2}\right)^{-4}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\left(\frac{2}{3}\right)^{1}+\left(\frac{2}{3}\right)^{2}+\left(\frac{2}{3}\right)^{3}+\left(\frac{2}{3}\right)^{4}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\frac{2}{3}+\frac{4}{9}+\frac{8}{27}+\frac{16}{81}\right]$
+    \\\indent\indent\indent\indent\indent= $6+\left(\frac{3}{2}\right)^{\mathrm{k}}\left[\frac{130}{81}\right] \geq\left(\frac{3}{2}\right)^{\mathrm{k}}$
+    \\
+    \\Reference: Lecture 1 Slides 38-49
+
+
+    \section{: The Loop Invariant}
+    Loop Invariant (A):\\
+    (1) n is an input integer such n $\geq$ 4\\
+    (2) An integer array G has a length of n+1\\
+    (3) i is an integer variable such that 4 $\leq$ i $\leq$ n +1\\
+    (4) G[k] = Gk for every integer k such that 0 $\leq$ k $<$ i \\
+    \\ Reference: Lecture 3 Slide 3 - 7
+    \\ Reference: Tutorial 4 Slide 2 Khobaib Zaamout
+    \\
+    \section{: Loop Invariant Proof}
+    We prove A is a loop invariant by loop theorem number 1, which states 3 facts that need to be true for this to be a valid loop invariant. Those 3 being:\\
+    \\The loop test after executed does not change the value of any inputs, variables or global data.
+    Whenever the loop is reached when the execution of the algorithm has started, the loop invariant along with the precondition is satisfied.\\
+    Lastly the loop Invariant (A), if satisfied in the beginning of the execution of the loop body, then it is also satisfied when the execution of the loop body ends.
+    \\
+    \\From observing the code we can see that line 15  does not have any side effects to the code in any way. Including inputs, variables or global data. Therefore, this property holds.
+    Now we consider the 4 assertions of our loop invariant at the start of every iteration of our loop body.\\
+    Taking a look at the first assertion we know that n$\leq$0 because of the precondition. Analyzing the code we can see that the code will not reach the loop at line 15 unless n$\leq$ 4. N can not equal to 0,1,2, or 3 because the loop would never be reached since the tests 1,3,5 or 7 would be satisfied. Therefore, the first assertion of A holds for this property.\\
+    Taking a look at the second assertion, as stated in line 9 we know that the array has length n+1. As we reach the starting of each iteration of the loop body we can see that the length of the array remains the same and does not change. Therefore, this property holds.\\
+    At the beginning of the execution of the while loop we see that the integer variable i is equal to 4, at line 14 and therefore this property holds for this assertion.\\
+    Analyzing the code we also see that the exact value of G[k] is assigned to the value of the function Gk as we approach the loop we see that G[0] =1, G[1] = 2, G[2] = 3 and lastly G[3]= 4. We can see that this matches the function, where $G_{0}$=1, $G_{1}$=2 and etc. So for any value k>=4 we can see that as i increments we find the value of such $G_{i}$ = G[i]. And the property still holds at the beginning of every loop iteration, therefore this property holds.\\
+    \\Now we consider the 4 assertions of our loop invariant at the end of every iteration of our loop body.\\
+    From our previous proof we know that n $\geq$ 4 and that the loop test does not alter.\\
+    From our previous proof we know that n$\geq$ 4 and that the loop test does not alter our value at the beginning of our loop. Examining the code we can see that between line 16 and 19 the value of n is still not altered at the end of the loop body and therefore the assertion holds for this property. \\
+    We can see that after each iteration of the loop at the end that there has been modifications at position (i) in the list depending on n being even or odd. Yet, there are no changes to the length of the list in between lines 15-19 therefore this property holds for this assertion. \\
+    We know that if we have entered the loop and began the loop body i$\leq$n, and at line 19 we can see that the value of i is increased by 1. By the end of the loop execution we can presume that i = N+1. Therefore, this assertion holds.\\
+    We noticed that in the previous proof of this assertion that as i increments G[i] = $G_{i}$ we can see that at the end of every iteration of this loop that his property holds. Since as i increments so does it’s placement in the array.\\
+    Since, A holds at each of the 3 positions in the loop, then by loop theorem 1 this is a loop invariant for this loop.
+    \\
+    \\Reference: Tutorial 4 Slide 2-17 Khobaib Zaamout
+    \\Reference: Lecture 3 Slides 7-28
+    \\
+    \section{: Partial correctness}
+    To prove that an algorithm is partially correct if one of these properties hold:\\
+    \\1.The algorithm while being run eventually comes to an end with it’s post condition being satisfied.\\
+    2.The execution of the algorithm is never ending. \\
+    By inspection of the code, we see that there is no undocumented inputs or global data accessed, and there is no undocumented data being modified.\\
+    \\By examining the code we see that after the precondition is satisfied, we first consider our base cases. We see that when n = 0, lines 1 and 2 are executed, the algorithm comes to an end, returning 1 = $G_{n}$= $G_{0}$.\\ Similarly now we consider the rest of the base cases where n=1,2, and 3. When n = 1 lines 3 and 4 are executed, the algorithm once again comes to an end, returning 2= $G_{n}$=$G_{1}$.\\ When n = 2 lines 5 and 6 are executed, the algorithm comes to an end, returning 3 = $G_{n}$=$G_{2}$. \\When n = 3 lines 7 and 8 are executed, the algorithm comes to an end, returning 4 = $G_{n}$=$G_{3}$. In all these cases we can see that the algorithm comes to and end with the post-condition satisfied. \textit{Therefore, this property holds for all base cases. }
+    \\
+    Tracing the code further we see when n = 4, the lines 9-14 are executed and we arrive at the while loop. Suppose the loop is never ending and the algorithm never terminates. Then we know that the second condition is still satisfied and therefore, still partially correct.\\
+    Now, considering that the loop does terminate. We now have to prove that the post condition is satisfied. To do that we take a look at our loop invariant, looking at  assertion 1 and 3 we see that i is an integer variable and n as an input integer, such that  4 $\leq$ i$\leq$ n+1.\\
+    We can see by examining the code that for the loop to come to an end then i$\leq$n. So i must equal n+1 at the end of the execution of the while loop. And from loop invariant assertion 4 we can see that G[k] = $G_{k}$. In the code we can see at line 20, the G[n] number is returned, proving that our post condition is also satisfied. This proves that the property holds for n=4 and all possibilities upon satisfying the precondition. \\
+
+    \textit{Therefore, this is algorithm is partially correct.}
+    \\
+    \\ Reference: Lecture 3 Slides 29-36
+    \\ Reference: Tutorial 4 Slide 16-23 Khobaib Zaamout
+    \\
+    \section{: While Loop Bound Function}
+    The function $f(n, i) = n-i$ is a bound function for the fGrin algorithm.\\
+    We will prove that this is correct using the definition of a bound function for a while loop.
+    \\Firstly, since it is assumed that the precondition is satisfied before being able to reach the while loop, n must be an integer valued input. Secondly, i is defined as an integer in line 14. Therefore, both of the variables accessed/modified within the while loop are integers. Making $f(n,i)$ a \textit{total integer valued} function.\\
+    \\Next, we can see that the value of i is incremented by 1 each iteration of the while loop. Also, note that by inspection of the code it can be seen that n is never changed. This, in turn, decreases $f(n, i)$ every iteration since $f(n, i)=n-1$.\\
+    \\Lastly, By examining the loop test on line 15 we can note that the loop test will fail if $i>n$. If $i>n$, the value of $f(n,i) \leq 0$ since $f(n,i)$ = n-i. \\
+    \\\textit{Since $f(n,i)$ satisfies all of the above criteria, this proves that $f(n,i)$ by definition, is a bound function for the while loop in the algorithm fGrin.}
+    \\
+    \\Reference Lecture 3 Slides 37-39
+
+
+
+
+    \section{: Proof of Termination}
+    Suppose the algorithm is executed with the precondition satisfied. Then we can trace the code to prove termination:\\
+    \\Suppose n=0. Then the test in line 1 passes and the algorithm \textit{terminates} after the return statement in line 2. \\
+    Suppose n=1. Then the test in line 1 fails and the algorithm continues onto line 3 in which the test succeeds and completes the return statement in line 4, after which, the code \textit{terminates}. \\
+    Suppose n=2. Then the test in line 1 fails and the algorithm continues to line 3 in which the test fails again. Then the algorithm continues onto line 5 in which the test succeeds. The algorithm then \textit{terminates} after the return statement in line 6.\\
+    Suppose n=3. Then the test in line 1 fails, the algorithm goes to line 3 in which the test fails again. The algorithm then goes to line 5 in which the test fails yet again so the algorithm continues on to line 7 in which the test succeeds and the algorithm \textit{terminates} after the return statement in line 8.\\
+    \\Now, suppose $n\geq 4$. To prove that the algorithm terminates in this case, we will use \textbf{Loop Theorem \#2.}\\
+    Continuing with the trace of the code, the algorithm will fail the tests in lines 1,3,5 and 7. It then executes lines 9-14. At line 15, the algorithm reaches a while loop.\\
+    \\First, by inspection of the code at line 15 we can see that the loop test has no side-effects. The loop test does not alter any values of any inputs, variables or global data. Let us also note that every execution of this loop test halts, since the loop test simply compares i and n.\\
+    Next, if the precondition is satisfied and this while loop is reached, by examining the loop body (lines 16-19) it can be noted that every execution of the loop body terminates. \\
+    Lastly, in question 9, we proved that the while loop for this algorithm does in fact have the bound function $f(n,i)$. \\
+    The statements above satisfy loop theorem 2. Hereby, proving that the while loop of this algorithm always terminates, as long as the precondition is satisfied. By inspection of the code we can also note that outside of the while loop, every other execution in this algorithm will also terminate.
+    \\ \textit{Therefore, when the precondition is satisfied, this algorithm will eventually terminate.}
+    \\
+    \\Reference: Lecture 3 Slides 40-43
+    \\
+    \section{: fGrin Complete Proof}
+    From the definitions of partial correctness, termination and correctness, we can conclude that when a program is both partially correct (which is proven in question 8) and it is proven to terminate (proven in question 10), that said algorithm is \textit{correct.} \textbf{Therefore, the algorithm fGrin is correct.}\\
+    \\Reference:  Lecture 3 slide 44
+    \\
+    \\
+    \\
+    \section{: Upper Bound for $T_{fGrin}(n)$ }
+    Given the integers below as an input for n, we get the following number of steps executed when following the "Uniform Cost Criterion":
+    \\\indent$n=0$:
+    \\\indent\indent\indent{Running time of $T_{fGrin}(0)=2$}
+    \\\indent\indent\indent\indent{Line 1 check succeeds (n = 0)}
+    \\\indent\indent\indent\indent{Line 2 executes and returns the integer 1}
+    \\\indent$n=1$:
+    \\\indent\indent\indent{Running time of $T_{fGrin}(1)=3$}
+    \\\indent\indent\indent\indent{Line 1 check fails (n $\neq$ 0)}
+    \\\indent\indent\indent\indent{Line 3 check succeeds (n = 1)}
+    \\\indent\indent\indent\indent{Line 4 executes and returns the integer 2}
+    \\\indent$n=2$:
+    \\\indent\indent\indent{Running time of $T_{fGrin}(2)=4$}
+    \\\indent\indent\indent\indent{Line 1 check fails (n $\neq$ 0)}
+    \\\indent\indent\indent\indent{Line 3 check fails (n $\neq$ 1)}
+    \\\indent\indent\indent\indent{Line 5 check succeeds (n = 2)}
+    \\\indent\indent\indent\indent{Line 6 executes and returns the integer 3}
+    \\\indent$n=3$:
+    \\\indent\indent\indent{Running time of $T_{fGrin}(3)=5$}
+    \\\indent\indent\indent\indent{Line 1 check fails ($n \neq 0$)}
+    \\\indent\indent\indent\indent{Line 3 check fails ($n \neq 1$)}
+    \\\indent\indent\indent\indent{Line 5 check fails ($n \neq 2$)}
+    \\\indent\indent\indent\indent{Line 7 check succeeds ($n = 3$)}
+    \\\indent\indent\indent\indent{Line 8 executes and returns the integer 4}
+    \\\indent$n\geq4$:
+    \\\indent\indent\indent{Running time of $T_{fGrin}(n)=5n$}
+    \\\indent\indent\indent\indent{Line 1 check fails (n $\neq$ 0)}
+    \\\indent\indent\indent\indent{Line 3 check fails (n $\neq$ 1)}
+    \\\indent\indent\indent\indent{Line 5 check fails (n $\neq$ 2)}
+    \\\indent\indent\indent\indent{Line 7 check fails (n $\neq$ 3)}
+    \\\indent\indent\indent\indent{Line 9 executes and creates an integer array ($G[]$) of length $n + 1$}
+    \\\indent\indent\indent\indent{Line 10 executes and sets $G[0]$ to the integer 1}
+    \\\indent\indent\indent\indent{Line 11 executes and sets $G[1]$ to the integer 2}
+    \\\indent\indent\indent\indent{Line 12 executes and sets $G[2]$ to the integer 3}
+    \\\indent\indent\indent\indent{Line 13 executes and sets $G[3]$ to the integer 4}
+    \\\indent\indent\indent\indent{Line 14 executes and creates a variable (i) set to integer 4}
+    \\\indent\indent\indent\indent{Line 15 check executes $n - 2$ times (while loop test)}
+    \\\indent\indent\indent\indent{Line 16 check executes $n - 3$ times (while loop body test)}
+    \\\indent\indent\indent\indent{Line 16 / 18 executes $n - 3$ times (while loop body code)}
+    \\\indent\indent\indent\indent{Line 19 executes $n - 3$ times (increments the loop index $i$ by 1)}
+    \\\indent\indent\indent\indent{Line 20 executes and returns the $n^{th}$ Grindelwald number ($G[n]$)}
+    \\\\Therefore: $T_{f G r i n}(n) \left\{\begin{array}{ll}{2} & {n=0} \\ {3} & {n=1} \\ {4} & {n=2} \\ {5} & {n=3} \\ {5 n} & {n \geq 4}\end{array}\right.$\\
+    \\Reference: Lecture 5 slides 4-27
+    \section{: FGrindelwald Program} \textit{See java file.}
+    \section{: Closed Form}
+    \textbf{Want to Prove:}
+    \\\indent\indent Want to Prove: $\mathrm{G}_{\text{fGrin}}(n)=\mathrm{n}+1$
+    \\\textbf{Base Case:}
+    \\\indent\indent$n=0$:
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(0)=0+1$
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(0)=1$
+    \\\indent\indent$n=1$:
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(1)=1+1$
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(1)=2$
+    \\\indent\indent$n=2$:
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(2)=2+1$
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(2)=3$
+    \\\indent\indent$n=3$:
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(3)=3+1$
+    \\\indent\indent\indent\indent$\mathrm{G}_{\mathrm{fGrin}}(3)=4$
+    \\\textbf{Inductive Hypothesis:}
+    Inductive Hypothesis: $\mathrm{G}_{\mathrm{fG} \text {rin}}(\mathrm{m})=\mathrm{n}+1$ such that $4 \leq m \leq k,$ where $\mathrm{k}$ is an odd integer and $\mathrm{k}+1$ is an even integer    \\\textbf{If k is even:}
+    \\\indent\indent$\mathrm{G}_{\text{fGrin}}(\mathrm{k})=2 \mathrm{G}_{\text{fGrin}}(k-1)-2 \mathrm{G}_{\text{fGrin}}(k-3)+\mathrm{G}_{\text{fGrin}}(k-4)$
+    \\\indent\indent\indent\indent\indent= $2 \mathrm(k)-2 \mathrm(k-2)+\mathrm(k-3)(\mathrm{IH})$
+    \\\indent\indent\indent\indent\indent= $(2 k)-(2 k-4)+\mathrm(k-3)$
+    \\\indent\indent\indent\indent\indent= $\mathrm(\mathrm{k}+1)$
+    \\\textbf{If k is odd:}
+    \\\indent\indent$\mathrm{G}_{\text{fGrin}}(\mathrm{k})=\mathrm{G}_{\text{fGrin}}(k-1)+3 \mathrm{G}_{\text{fGrin}}(k-2)-5 \mathrm{G}_{\text{fGrin}}(k-3)+2 \mathrm{G}_{\text{fGrin}}(k-4)$
+    \\\indent\indent\indent\indent\indent= $\mathrm(k-1)+3 \mathrm(k-2)-5 \mathrm(k-3)+2 \mathrm(k-4)(\mathrm{IH})$
+    \\\indent\indent\indent\indent\indent= $\mathrm(k-1)+\mathrm(3 k-6)-\mathrm(5 k-15)+\mathrm(2 k-8)$
+    \\\indent\indent\indent\indent\indent= $\mathrm(\mathrm{k}+1)$
+    \\Reference: Closed form definition - \text{https://en.wikipedia.org/wiki/Closed-form\_expression}
+\end{document}

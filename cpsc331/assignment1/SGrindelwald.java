@@ -1,3 +1,8 @@
+/*
+Martha Ibarra 30003129
+Sharjeel Junaid 30008424
+Dheeraj Kumar 30011439
+*/
 package cpsc331.assignment1;
 
 public class SGrindelwald
@@ -28,7 +33,24 @@ public class SGrindelwald
         }
     }
 
-    // Method to compute the n-th Grindelwald number when n >= 0
+    /*Bound Function
+	The function f(n) = n is a bound function for the sGrin algorithm.
+    Precondition states that n>=0.
+
+    Recurrence function (refer to the solution for Q4):
+    n = 0 -> 2
+    n = 1 -> 3
+    n = 2 -> 4
+    n = 3 -> 5
+    n >= 4 and n is even -> 6 + TsGrin(n-1) + TsGrin(n-3) + TsGrin(n-4)
+    n >= 4 and n is even -> 6 + TsGrin(n-1) + TsGrin(n-2) + TsGrin(n-3) + TsGrin(n-4)*/
+    /**
+     * Method to compute the n-th Grindelwald number when n >= 0
+     *
+     * @param n Input integer
+     *
+     * @return n-th Grindelwald number
+     */
     protected static Integer sGrin(int n)
     {
         if (n < 0) throw new IllegalArgumentException();
@@ -38,5 +60,6 @@ public class SGrindelwald
         else if (n == 3) return 4;
         else if ((n % 2) == 0) return 2 * sGrin(n - 1) - 2 * sGrin(n - 3) + sGrin(n - 4);
         else return sGrin(n - 1) + 3 * sGrin(n - 2) - 5 * sGrin(n - 3) + 2 * sGrin(n - 4);
+        // post condition states that the n'th Grindelwald number, G(n), is returned as output.
     }
 }
