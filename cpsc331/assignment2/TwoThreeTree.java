@@ -530,15 +530,43 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void addLeaf(E key, TwoThreeNode x)
     {
-        //        System.out.println("PRINT: " + ((root() == null) ? "null" : root().toString()));
-        //        System.out.println(x.numberChildren());
-        //        System.out.println(x.element());
+        // Checks to see if the passed in node has 2 children and adds the passed in key as a 3rd node
+        if (x.numberChildren() == 2)
+        {
+            // Creates a new node that will be the 3rd child of x
+            x.thirdChild = new TwoThreeNode();
 
-        x.thirdChild = new TwoThreeNode();
-        x.thirdChild().element = key;
-        x.thirdMax = key;
-        x.thirdChild().parent = x;
-        x.numberChildren++;
+            // Sets the parent node of the new node
+            x.thirdChild().parent = root();
+
+            // Updates the number of children for x
+            root().numberChildren = 3;
+
+            // Stores the passed in key in the new child node
+            x.thirdChild().element = key;
+
+            // Stores the new 3rd max in x
+            x.thirdMax = key;
+
+        }
+        // Checks to see if the passed in node has 3 children and adds the passed in key as a 4th node
+        else if (x.numberChildren() == 3)
+        {
+            // Creates a new node that will be the 4th child of x
+            x.fourthChild = new TwoThreeNode();
+
+            // Sets the parent node of the new node
+            x.fourthChild().parent = root();
+
+            // Updates the number of children for x
+            root().numberChildren = 4;
+
+            // Stores the passed in key in the new child node
+            x.fourthChild().element = key;
+
+            // Stores the new 4th max in x
+            x.fourthMax = key;
+        }
     }
 
     // Completes the restoration of a 2-3 tree after the
@@ -556,9 +584,77 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void fixRoot()
     {
+        // Checks to see if the 4th child's value is less than the first max
+        if (root().firstMax().compareTo(root().fourthChild().element) < 0)
+        {
+            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
+            if (root().firstChild().numberChildren() == 0)
+            {
+                // Copies over the root's 4th child to the subtree as a child
+                root().firstChild().firstChild = root().fourthChild();
 
-        // FOR YOU TO REPLACE
+                // Updates the parent node of the moved node
+                root().firstChild().firstChild().parent = root().thirdChild();
 
+                // Updates the number of children for x
+                root().numberChildren = 3;
+
+                // Removes the 4th max from the root node
+                root().fourthMax = null;
+
+                // Removes the 4th child from the root node
+                root().fourthChild = null;
+            }
+        }
+        // Checks to see if the 4th child's value is less than the second max
+        else if (root().secondMax().compareTo(root().fourthChild().element) < 0)
+        {
+            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
+            if (root().secondChild().numberChildren() == 0)
+            {
+                // Copies over the root's 4th child to the subtree as a child
+                root().secondChild().firstChild = root().fourthChild();
+
+                // Updates the parent node of the moved node
+                root().secondChild().firstChild().parent = root().thirdChild();
+
+                // Updates the number of children for x
+                root().numberChildren = 3;
+
+                // Removes the 4th max from the root node
+                root().fourthMax = null;
+
+                // Removes the 4th child from the root node
+                root().fourthChild = null;
+            }
+        }
+        // Checks to see if the 4th child's value is less than the third max
+        else if (root().thirdMax().compareTo(root().fourthChild().element) < 0)
+        {
+            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
+            if (root().thirdChild().numberChildren() == 0)
+            {
+                // Copies over the root's 4th child to the subtree as a child
+                root().thirdChild().firstChild = root().fourthChild();
+
+                // Updates the parent node of the moved node
+                root().thirdChild().firstChild().parent = root().thirdChild();
+
+                // Updates the number of children for x
+                root().numberChildren = 3;
+
+                // Removes the 4th max from the root node
+                root().fourthMax = null;
+
+                // Removes the 4th child from the root node
+                root().fourthChild = null;
+            }
+        }
+        // Code run if the 4th child's value was greater than the third max
+        else
+        {
+
+        }
     }
 
     // *****************************************************************
