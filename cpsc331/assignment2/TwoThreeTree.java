@@ -557,6 +557,8 @@ public class TwoThreeTree<E extends Comparable<E>>
                 newNode.fourthChild().numberChildren = 2;
 
                 newNode.parent = x.parent();
+
+                x = newNode;
             }
         }
     }
