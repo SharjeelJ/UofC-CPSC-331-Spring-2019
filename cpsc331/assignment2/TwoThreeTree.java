@@ -500,12 +500,94 @@ public class TwoThreeTree<E extends Comparable<E>>
     //    properties), or T satisfies the "Modified Tree" properties and x
     //    has four children.
 
+    // TODO
     private void raiseSurplus(TwoThreeNode x)
     {
+        TwoThreeNode problematicNode = null;
+        int nodeToSwitch = 0;
+        for (int counter = 1; counter <= x.numberChildren(); counter++)
+        {
+            switch (counter)
+            {
+                case 1:
+                    if (x.firstChild().numberChildren() == 4)
+                    {
+                        problematicNode = x.firstChild();
+                        nodeToSwitch = 1;
+                    }
+                    break;
+                case 2:
+                    if (x.secondChild().numberChildren() == 4)
+                    {
+                        problematicNode = x.secondChild();
+                        nodeToSwitch = 2;
+                    }
+                    break;
+                case 3:
+                    if (x.thirdChild().numberChildren() == 4)
+                    {
+                        problematicNode = x.thirdChild();
+                        nodeToSwitch = 3;
+                    }
+                    break;
+                case 4:
+                    if (x.fourthChild().numberChildren() == 4)
+                    {
+                        problematicNode = x.fourthChild();
+                        nodeToSwitch = 4;
+                    }
+                    break;
+            }
+            if (problematicNode != null)
+            {
+                TwoThreeNode newNode = new TwoThreeNode();
 
-        // TODO
-        // FOR YOU REPLACE
+                newNode.firstChild = new TwoThreeNode();
+                newNode.secondChild = new TwoThreeNode();
 
+                newNode.firstChild().firstChild = problematicNode.firstChild();
+                newNode.firstChild().secondChild = problematicNode.secondChild();
+                newNode.secondChild().firstChild = problematicNode.thirdChild();
+                newNode.secondChild().secondChild = problematicNode.fourthChild();
+
+                newNode.firstChild().parent = newNode;
+                newNode.secondChild().parent = newNode;
+                newNode.firstChild().firstChild().parent = newNode.firstChild();
+                newNode.firstChild().secondChild().parent = newNode.firstChild();
+                newNode.secondChild().firstChild().parent = newNode.secondChild();
+                newNode.secondChild().secondChild().parent = newNode.secondChild();
+
+                newNode.firstMax = problematicNode.secondMax();
+                newNode.secondMax = problematicNode.fourthMax();
+
+                newNode.firstChild().firstMax = problematicNode.firstMax();
+                newNode.firstChild().secondMax = problematicNode.secondMax();
+                newNode.secondChild().firstMax = problematicNode.thirdMax();
+                newNode.secondChild().secondMax = problematicNode.fourthMax();
+
+                newNode.numberChildren = 2;
+                newNode.firstChild().numberChildren = 2;
+                newNode.secondChild().numberChildren = 2;
+
+                newNode.parent = x;
+
+                switch (nodeToSwitch)
+                {
+                    case 1:
+                        x.firstChild = newNode;
+                        break;
+                    case 2:
+                        x.secondChild = newNode;
+                        break;
+                    case 3:
+                        x.thirdChild = newNode;
+                        break;
+                    case 4:
+                        x.fourthChild = newNode;
+                        break;
+                }
+            }
+        }
     }
 
     // Adds a leaf storing a given value as a child of a given
@@ -530,7 +612,43 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void addLeaf(E key, TwoThreeNode x)
     {
-        // Checks to see if the passed in node has 2 children and adds the passed in key as a 3rd node
+        // Checks to see if the passed in node has 0 children and adds the passed in key as a 1st child
+        if (x.numberChildren() == 0)
+        {
+            // Creates a new node that will be the 1st child of x
+            x.firstChild = new TwoThreeNode();
+
+            // Sets the parent node of the new node
+            x.firstChild().parent = root();
+
+            // Updates the number of children for x
+            x.numberChildren = 1;
+
+            // Stores the passed in key in the new child node
+            x.firstChild().element = key;
+
+            // Stores the new 1st max in x
+            x.firstMax = key;
+        }
+        // Checks to see if the passed in node has 1 child and adds the passed in key as a 2nd child
+        else if (x.numberChildren() == 1)
+        {
+            // Creates a new node that will be the 2nd child of x
+            x.secondChild = new TwoThreeNode();
+
+            // Sets the parent node of the new node
+            x.secondChild().parent = root();
+
+            // Updates the number of children for x
+            x.numberChildren = 2;
+
+            // Stores the passed in key in the new child node
+            x.secondChild().element = key;
+
+            // Stores the new 2nd max in x
+            x.secondMax = key;
+        }
+        // Checks to see if the passed in node has 2 children and adds the passed in key as a 3rd child
         if (x.numberChildren() == 2)
         {
             // Creates a new node that will be the 3rd child of x
@@ -540,16 +658,15 @@ public class TwoThreeTree<E extends Comparable<E>>
             x.thirdChild().parent = root();
 
             // Updates the number of children for x
-            root().numberChildren = 3;
+            x.numberChildren = 3;
 
             // Stores the passed in key in the new child node
             x.thirdChild().element = key;
 
             // Stores the new 3rd max in x
             x.thirdMax = key;
-
         }
-        // Checks to see if the passed in node has 3 children and adds the passed in key as a 4th node
+        // Checks to see if the passed in node has 3 children and adds the passed in key as a 4th child
         else if (x.numberChildren() == 3)
         {
             // Creates a new node that will be the 4th child of x
@@ -559,7 +676,7 @@ public class TwoThreeTree<E extends Comparable<E>>
             x.fourthChild().parent = root();
 
             // Updates the number of children for x
-            root().numberChildren = 4;
+            x.numberChildren = 4;
 
             // Stores the passed in key in the new child node
             x.fourthChild().element = key;
@@ -584,6 +701,89 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void fixRoot()
     {
+        //        TwoThreeNode newRootNode = root();
+        TwoThreeNode newRootNode = new TwoThreeNode();
+
+        newRootNode.firstChild = new TwoThreeNode();
+        newRootNode.secondChild = new TwoThreeNode();
+
+        newRootNode.firstChild().firstChild = root().firstChild();
+        newRootNode.firstChild().secondChild = root().secondChild();
+        newRootNode.secondChild().firstChild = root().thirdChild();
+        newRootNode.secondChild().secondChild = root().fourthChild();
+
+        newRootNode.firstChild().parent = newRootNode;
+        newRootNode.secondChild().parent = newRootNode;
+        newRootNode.firstChild().firstChild().parent = newRootNode.firstChild();
+        newRootNode.firstChild().secondChild().parent = newRootNode.firstChild();
+        newRootNode.secondChild().firstChild().parent = newRootNode.secondChild();
+        newRootNode.secondChild().secondChild().parent = newRootNode.secondChild();
+
+        newRootNode.firstMax = root().secondMax();
+        newRootNode.secondMax = root().fourthMax();
+
+        newRootNode.firstChild().firstMax = root().firstMax();
+        newRootNode.firstChild().secondMax = root().secondMax();
+        newRootNode.secondChild().firstMax = root().thirdMax();
+        newRootNode.secondChild().secondMax = root().fourthMax();
+
+        newRootNode.numberChildren = 2;
+        newRootNode.firstChild().numberChildren = 2;
+        newRootNode.secondChild().numberChildren = 2;
+
+        root = newRootNode;
+
+        /*
+        // Stores the problematic node
+        TwoThreeNode problematicNode = root().fourthChild();
+
+        // Stores the current root node
+        TwoThreeNode currentRootNode = root();
+
+        // Removes the problematic node from the root node
+        root().fourthChild = null;
+
+        // Updates the number of children for the root node
+        root().numberChildren = 3;
+
+        // Stores a boolean that will keep track of when the problematic node has been handled to stop the loop
+        boolean problematicNodeHandled = false;
+
+        // Runs a loop that slowly goes deeper into the subtree of the current root node to insert the problematic node
+        while (!problematicNodeHandled)
+        {
+            for (int counter = 1; counter <= currentRootNode.numberChildren(); counter++)
+            {
+                switch (counter)
+                {
+                    case 1:
+                        if (currentRootNode.firstMax().compareTo(problematicNode.element()) < 0)
+                        {
+                            insert();
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                }
+            }
+
+            // Checks to see the number of children under the current root node
+            if (currentRootNode.numberChildren() == 0)
+
+            if (currentRootNode.numberChildren() == 3)
+            {
+                if (currentRootNode.secondChild().element().compareTo(problematicNode.element()) < 0)
+                {
+
+                }
+            }
+        }
+         */
+
+        /*
         // Checks to see if the 4th child's value is less than the first max
         if (root().firstMax().compareTo(root().fourthChild().element) < 0)
         {
@@ -655,6 +855,7 @@ public class TwoThreeTree<E extends Comparable<E>>
         {
 
         }
+        */
     }
 
     // *****************************************************************
