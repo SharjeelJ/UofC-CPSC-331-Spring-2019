@@ -553,12 +553,10 @@ public class TwoThreeTree<E extends Comparable<E>>
                 newNode.fourthChild().secondMax = problematicNode.fourthMax();
 
                 newNode.numberChildren = 4;
-                newNode.firstChild().numberChildren = 2;
-                newNode.secondChild().numberChildren = 2;
+                newNode.thirdChild().numberChildren = 2;
+                newNode.fourthChild().numberChildren = 2;
 
                 newNode.parent = x.parent();
-
-                x = newNode;
             }
         }
     }
