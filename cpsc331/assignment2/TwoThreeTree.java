@@ -503,89 +503,62 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void raiseSurplus(TwoThreeNode x)
     {
-        TwoThreeNode problematicNode = null;
-        int nodeToSwitch = 0;
         for (int counter = 1; counter <= x.numberChildren(); counter++)
         {
+            TwoThreeNode problematicNode = null;
             switch (counter)
             {
                 case 1:
-                    if (x.firstChild().numberChildren() == 4)
-                    {
-                        problematicNode = x.firstChild();
-                        nodeToSwitch = 1;
-                    }
+                    if (x.firstChild().numberChildren() == 4) problematicNode = x.firstChild();
                     break;
                 case 2:
-                    if (x.secondChild().numberChildren() == 4)
-                    {
-                        problematicNode = x.secondChild();
-                        nodeToSwitch = 2;
-                    }
+                    if (x.secondChild().numberChildren() == 4) problematicNode = x.secondChild();
                     break;
                 case 3:
-                    if (x.thirdChild().numberChildren() == 4)
-                    {
-                        problematicNode = x.thirdChild();
-                        nodeToSwitch = 3;
-                    }
+                    if (x.thirdChild().numberChildren() == 4) problematicNode = x.thirdChild();
                     break;
                 case 4:
-                    if (x.fourthChild().numberChildren() == 4)
-                    {
-                        problematicNode = x.fourthChild();
-                        nodeToSwitch = 4;
-                    }
+                    if (x.fourthChild().numberChildren() == 4) problematicNode = x.fourthChild();
                     break;
             }
             if (problematicNode != null)
             {
                 TwoThreeNode newNode = new TwoThreeNode();
 
-                newNode.firstChild = new TwoThreeNode();
-                newNode.secondChild = new TwoThreeNode();
+                newNode.firstChild = x.firstChild();
+                newNode.secondChild = x.secondChild();
+                newNode.thirdChild = new TwoThreeNode();
+                newNode.fourthChild = new TwoThreeNode();
 
-                newNode.firstChild().firstChild = problematicNode.firstChild();
-                newNode.firstChild().secondChild = problematicNode.secondChild();
-                newNode.secondChild().firstChild = problematicNode.thirdChild();
-                newNode.secondChild().secondChild = problematicNode.fourthChild();
+                newNode.thirdChild().firstChild = problematicNode.firstChild();
+                newNode.thirdChild().secondChild = problematicNode.secondChild();
+                newNode.fourthChild().firstChild = problematicNode.thirdChild();
+                newNode.fourthChild().secondChild = problematicNode.fourthChild();
 
-                newNode.firstChild().parent = newNode;
-                newNode.secondChild().parent = newNode;
-                newNode.firstChild().firstChild().parent = newNode.firstChild();
-                newNode.firstChild().secondChild().parent = newNode.firstChild();
-                newNode.secondChild().firstChild().parent = newNode.secondChild();
-                newNode.secondChild().secondChild().parent = newNode.secondChild();
+                newNode.thirdChild().parent = newNode;
+                newNode.fourthChild().parent = newNode;
+                newNode.thirdChild().firstChild().parent = newNode.thirdChild();
+                newNode.thirdChild().secondChild().parent = newNode.thirdChild();
+                newNode.fourthChild().firstChild().parent = newNode.fourthChild();
+                newNode.fourthChild().secondChild().parent = newNode.fourthChild();
 
-                newNode.firstMax = problematicNode.secondMax();
-                newNode.secondMax = problematicNode.fourthMax();
+                newNode.firstMax = x.firstMax();
+                newNode.secondMax = x.secondMax();
+                newNode.thirdMax = problematicNode.secondMax();
+                newNode.fourthMax = problematicNode.fourthMax();
 
-                newNode.firstChild().firstMax = problematicNode.firstMax();
-                newNode.firstChild().secondMax = problematicNode.secondMax();
-                newNode.secondChild().firstMax = problematicNode.thirdMax();
-                newNode.secondChild().secondMax = problematicNode.fourthMax();
+                newNode.thirdChild().firstMax = problematicNode.firstMax();
+                newNode.thirdChild().secondMax = problematicNode.secondMax();
+                newNode.fourthChild().firstMax = problematicNode.thirdMax();
+                newNode.fourthChild().secondMax = problematicNode.fourthMax();
 
-                newNode.numberChildren = 2;
+                newNode.numberChildren = 4;
                 newNode.firstChild().numberChildren = 2;
                 newNode.secondChild().numberChildren = 2;
 
-                newNode.parent = x;
+                newNode.parent = x.parent();
 
-                switch (nodeToSwitch)
-                {
-                    case 1:
-                        x.firstChild = newNode;
-                        break;
-                    case 2:
-                        x.secondChild = newNode;
-                        break;
-                    case 3:
-                        x.thirdChild = newNode;
-                        break;
-                    case 4:
-                        x.fourthChild = newNode;
-                        break;
-                }
+                x = newNode;
             }
         }
     }
@@ -701,7 +674,6 @@ public class TwoThreeTree<E extends Comparable<E>>
     // TODO
     private void fixRoot()
     {
-        //        TwoThreeNode newRootNode = root();
         TwoThreeNode newRootNode = new TwoThreeNode();
 
         newRootNode.firstChild = new TwoThreeNode();
@@ -732,130 +704,6 @@ public class TwoThreeTree<E extends Comparable<E>>
         newRootNode.secondChild().numberChildren = 2;
 
         root = newRootNode;
-
-        /*
-        // Stores the problematic node
-        TwoThreeNode problematicNode = root().fourthChild();
-
-        // Stores the current root node
-        TwoThreeNode currentRootNode = root();
-
-        // Removes the problematic node from the root node
-        root().fourthChild = null;
-
-        // Updates the number of children for the root node
-        root().numberChildren = 3;
-
-        // Stores a boolean that will keep track of when the problematic node has been handled to stop the loop
-        boolean problematicNodeHandled = false;
-
-        // Runs a loop that slowly goes deeper into the subtree of the current root node to insert the problematic node
-        while (!problematicNodeHandled)
-        {
-            for (int counter = 1; counter <= currentRootNode.numberChildren(); counter++)
-            {
-                switch (counter)
-                {
-                    case 1:
-                        if (currentRootNode.firstMax().compareTo(problematicNode.element()) < 0)
-                        {
-                            insert();
-                        }
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    default:
-                }
-            }
-
-            // Checks to see the number of children under the current root node
-            if (currentRootNode.numberChildren() == 0)
-
-            if (currentRootNode.numberChildren() == 3)
-            {
-                if (currentRootNode.secondChild().element().compareTo(problematicNode.element()) < 0)
-                {
-
-                }
-            }
-        }
-         */
-
-        /*
-        // Checks to see if the 4th child's value is less than the first max
-        if (root().firstMax().compareTo(root().fourthChild().element) < 0)
-        {
-            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
-            if (root().firstChild().numberChildren() == 0)
-            {
-                // Copies over the root's 4th child to the subtree as a child
-                root().firstChild().firstChild = root().fourthChild();
-
-                // Updates the parent node of the moved node
-                root().firstChild().firstChild().parent = root().thirdChild();
-
-                // Updates the number of children for x
-                root().numberChildren = 3;
-
-                // Removes the 4th max from the root node
-                root().fourthMax = null;
-
-                // Removes the 4th child from the root node
-                root().fourthChild = null;
-            }
-        }
-        // Checks to see if the 4th child's value is less than the second max
-        else if (root().secondMax().compareTo(root().fourthChild().element) < 0)
-        {
-            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
-            if (root().secondChild().numberChildren() == 0)
-            {
-                // Copies over the root's 4th child to the subtree as a child
-                root().secondChild().firstChild = root().fourthChild();
-
-                // Updates the parent node of the moved node
-                root().secondChild().firstChild().parent = root().thirdChild();
-
-                // Updates the number of children for x
-                root().numberChildren = 3;
-
-                // Removes the 4th max from the root node
-                root().fourthMax = null;
-
-                // Removes the 4th child from the root node
-                root().fourthChild = null;
-            }
-        }
-        // Checks to see if the 4th child's value is less than the third max
-        else if (root().thirdMax().compareTo(root().fourthChild().element) < 0)
-        {
-            // Checks to see if no children exist under the subtree and moves the root's 4th node to be a child under the subtree
-            if (root().thirdChild().numberChildren() == 0)
-            {
-                // Copies over the root's 4th child to the subtree as a child
-                root().thirdChild().firstChild = root().fourthChild();
-
-                // Updates the parent node of the moved node
-                root().thirdChild().firstChild().parent = root().thirdChild();
-
-                // Updates the number of children for x
-                root().numberChildren = 3;
-
-                // Removes the 4th max from the root node
-                root().fourthMax = null;
-
-                // Removes the 4th child from the root node
-                root().fourthChild = null;
-            }
-        }
-        // Code run if the 4th child's value was greater than the third max
-        else
-        {
-
-        }
-        */
     }
 
     // *****************************************************************
