@@ -632,15 +632,6 @@ public class TwoThreeTree<E extends Comparable<E>>
                         newNode.secondChild().firstChild = x.firstChild().thirdChild();
                         newNode.secondChild().secondChild = x.firstChild().fourthChild();
 
-                        // Sets the parent nodes of the left and right subtrees
-                        newNode.parent = x.parent();
-                        newNode.firstChild().parent = newNode;
-                        newNode.secondChild().parent = newNode;
-                        newNode.firstChild().firstChild().parent = newNode.firstChild();
-                        newNode.firstChild().secondChild().parent = newNode.firstChild();
-                        newNode.secondChild().firstChild().parent = newNode.secondChild();
-                        newNode.secondChild().secondChild().parent = newNode.secondChild();
-
                         // Updates the new node's max values to reflect the new children
                         newNode.firstMax = x.firstChild.secondMax();
                         newNode.secondMax = x.firstChild().fourthMax();
@@ -658,7 +649,6 @@ public class TwoThreeTree<E extends Comparable<E>>
                         newNode.firstChild().numberChildren = 2;
                         newNode.secondChild().numberChildren = 2;
 
-
                         // Syncs over the changes to the children of the live node x
                         x.firstChild = newNode.firstChild();
                         x.secondChild = newNode.secondChild();
@@ -672,21 +662,68 @@ public class TwoThreeTree<E extends Comparable<E>>
                         x.thirdMax = newNode.thirdMax();
                         x.fourthMax = newNode.fourthMax();
 
-                        try
-                        {
-                            // Syncs over the updated parent values to the live node x and its children
-                            x.parent = newNode.parent;
-                            x.firstChild().parent = x;
-                            x.secondChild().parent = x;
-                            x.thirdChild().parent = x;
-                            x.fourthChild().parent = x;
-                        } catch (NullPointerException e)
-                        {
-
-                        }
-
                         // Syncs over the updated number of children to the live node x
                         x.numberChildren = newNode.numberChildren();
+
+                        // Syncs over the updated parent values to the live node x and its children
+                        for (int childCounter = 1; childCounter <= x.numberChildren(); childCounter++)
+                        {
+                            switch (childCounter)
+                            {
+                                case 1:
+                                    try
+                                    {
+                                        x.firstChild().parent = x;
+                                        x.firstChild().firstChild().parent = x.firstChild();
+                                        x.firstChild().secondChild().parent = x.firstChild();
+                                        x.firstChild().thirdChild().parent = x.firstChild();
+                                        x.firstChild().fourthChild().parent = x.firstChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 2:
+                                    try
+                                    {
+                                        x.secondChild().parent = x;
+                                        x.secondChild().firstChild().parent = x.secondChild();
+                                        x.secondChild().secondChild().parent = x.secondChild();
+                                        x.secondChild().thirdChild().parent = x.secondChild();
+                                        x.secondChild().fourthChild().parent = x.secondChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 3:
+                                    try
+                                    {
+                                        x.thirdChild().parent = x;
+                                        x.thirdChild().firstChild().parent = x.thirdChild();
+                                        x.thirdChild().secondChild().parent = x.thirdChild();
+                                        x.thirdChild().thirdChild().parent = x.thirdChild();
+                                        x.thirdChild().fourthChild().parent = x.thirdChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 4:
+                                    try
+                                    {
+                                        x.fourthChild().parent = x;
+                                        x.fourthChild().firstChild().parent = x.fourthChild();
+                                        x.fourthChild().secondChild().parent = x.fourthChild();
+                                        x.fourthChild().thirdChild().parent = x.fourthChild();
+                                        x.fourthChild().fourthChild().parent = x.fourthChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                            }
+                        }
                     }
                     break;
                 // Child 2
@@ -707,15 +744,6 @@ public class TwoThreeTree<E extends Comparable<E>>
                         newNode.secondChild().secondChild = x.secondChild().secondChild();
                         newNode.thirdChild().firstChild = x.secondChild().thirdChild();
                         newNode.thirdChild().secondChild = x.secondChild().fourthChild();
-
-                        // Sets the parent nodes of the left and right subtrees
-                        newNode.parent = x.parent();
-                        newNode.secondChild().parent = newNode;
-                        newNode.thirdChild().parent = newNode;
-                        newNode.firstChild().firstChild().parent = newNode.firstChild();
-                        newNode.firstChild().secondChild().parent = newNode.firstChild();
-                        newNode.secondChild().firstChild().parent = newNode.secondChild();
-                        newNode.secondChild().secondChild().parent = newNode.secondChild();
 
                         // Updates the new node's max values to reflect the new children
                         newNode.firstMax = x.firstMax();
@@ -740,28 +768,74 @@ public class TwoThreeTree<E extends Comparable<E>>
                         x.thirdChild = newNode.thirdChild();
                         x.fourthChild = newNode.fourthChild();
 
-
                         // Syncs over the updated max values to the live node x
                         x.firstMax = newNode.firstMax();
                         x.secondMax = newNode.secondMax();
                         x.thirdMax = newNode.thirdMax();
                         x.fourthMax = newNode.fourthMax();
 
-                        try
-                        {
-                            // Syncs over the updated parent values to the live node x and its children
-                            x.parent = newNode.parent;
-                            x.firstChild().parent = x;
-                            x.secondChild().parent = x;
-                            x.thirdChild().parent = x;
-                            x.fourthChild().parent = x;
-                        } catch (NullPointerException e)
-                        {
-
-                        }
-
                         // Syncs over the updated number of children to the live node x
                         x.numberChildren = newNode.numberChildren();
+
+                        // Syncs over the updated parent values to the live node x and its children
+                        for (int childCounter = 1; childCounter <= x.numberChildren(); childCounter++)
+                        {
+                            switch (childCounter)
+                            {
+                                case 1:
+                                    try
+                                    {
+                                        x.firstChild().parent = x;
+                                        x.firstChild().firstChild().parent = x.firstChild();
+                                        x.firstChild().secondChild().parent = x.firstChild();
+                                        x.firstChild().thirdChild().parent = x.firstChild();
+                                        x.firstChild().fourthChild().parent = x.firstChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 2:
+                                    try
+                                    {
+                                        x.secondChild().parent = x;
+                                        x.secondChild().firstChild().parent = x.secondChild();
+                                        x.secondChild().secondChild().parent = x.secondChild();
+                                        x.secondChild().thirdChild().parent = x.secondChild();
+                                        x.secondChild().fourthChild().parent = x.secondChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 3:
+                                    try
+                                    {
+                                        x.thirdChild().parent = x;
+                                        x.thirdChild().firstChild().parent = x.thirdChild();
+                                        x.thirdChild().secondChild().parent = x.thirdChild();
+                                        x.thirdChild().thirdChild().parent = x.thirdChild();
+                                        x.thirdChild().fourthChild().parent = x.thirdChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 4:
+                                    try
+                                    {
+                                        x.fourthChild().parent = x;
+                                        x.fourthChild().firstChild().parent = x.fourthChild();
+                                        x.fourthChild().secondChild().parent = x.fourthChild();
+                                        x.fourthChild().thirdChild().parent = x.fourthChild();
+                                        x.fourthChild().fourthChild().parent = x.fourthChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                            }
+                        }
                     }
                     break;
                 // Child 3
@@ -782,15 +856,6 @@ public class TwoThreeTree<E extends Comparable<E>>
                         newNode.thirdChild().secondChild = x.thirdChild().secondChild();
                         newNode.fourthChild().firstChild = x.thirdChild().thirdChild();
                         newNode.fourthChild().secondChild = x.thirdChild().fourthChild();
-
-                        // Sets the parent nodes of the left and right subtrees
-                        newNode.parent = x.parent();
-                        newNode.thirdChild().parent = newNode;
-                        newNode.fourthChild().parent = newNode;
-                        newNode.thirdChild().firstChild().parent = newNode.thirdChild();
-                        newNode.thirdChild().secondChild().parent = newNode.thirdChild();
-                        newNode.fourthChild().firstChild().parent = newNode.fourthChild();
-                        newNode.fourthChild().secondChild().parent = newNode.fourthChild();
 
                         // Updates the new node's max values to reflect the new children
                         newNode.firstMax = x.firstMax();
@@ -822,21 +887,68 @@ public class TwoThreeTree<E extends Comparable<E>>
                         x.thirdMax = newNode.thirdMax();
                         x.fourthMax = newNode.fourthMax();
 
-                        try
-                        {
-                            // Syncs over the updated parent values to the live node x and its children
-                            x.parent = newNode.parent;
-                            x.firstChild().parent = x;
-                            x.secondChild().parent = x;
-                            x.thirdChild().parent = x;
-                            x.fourthChild().parent = x;
-                        } catch (NullPointerException e)
-                        {
-
-                        }
-
                         // Syncs over the updated number of children to the live node x
                         x.numberChildren = newNode.numberChildren();
+
+                        // Syncs over the updated parent values to the live node x and its children
+                        for (int childCounter = 1; childCounter <= x.numberChildren(); childCounter++)
+                        {
+                            switch (childCounter)
+                            {
+                                case 1:
+                                    try
+                                    {
+                                        x.firstChild().parent = x;
+                                        x.firstChild().firstChild().parent = x.firstChild();
+                                        x.firstChild().secondChild().parent = x.firstChild();
+                                        x.firstChild().thirdChild().parent = x.firstChild();
+                                        x.firstChild().fourthChild().parent = x.firstChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 2:
+                                    try
+                                    {
+                                        x.secondChild().parent = x;
+                                        x.secondChild().firstChild().parent = x.secondChild();
+                                        x.secondChild().secondChild().parent = x.secondChild();
+                                        x.secondChild().thirdChild().parent = x.secondChild();
+                                        x.secondChild().fourthChild().parent = x.secondChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 3:
+                                    try
+                                    {
+                                        x.thirdChild().parent = x;
+                                        x.thirdChild().firstChild().parent = x.thirdChild();
+                                        x.thirdChild().secondChild().parent = x.thirdChild();
+                                        x.thirdChild().thirdChild().parent = x.thirdChild();
+                                        x.thirdChild().fourthChild().parent = x.thirdChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                                case 4:
+                                    try
+                                    {
+                                        x.fourthChild().parent = x;
+                                        x.fourthChild().firstChild().parent = x.fourthChild();
+                                        x.fourthChild().secondChild().parent = x.fourthChild();
+                                        x.fourthChild().thirdChild().parent = x.fourthChild();
+                                        x.fourthChild().fourthChild().parent = x.fourthChild();
+                                    } catch (NullPointerException e)
+                                    {
+
+                                    }
+                                    break;
+                            }
+                        }
                     }
                     break;
             }
@@ -870,7 +982,7 @@ public class TwoThreeTree<E extends Comparable<E>>
             x.firstChild = new TwoThreeNode();
 
             // Sets the parent node of the new node
-            x.firstChild().parent = root();
+            x.firstChild().parent = x;
 
             // Updates the number of children for x
             x.numberChildren = 1;
@@ -891,7 +1003,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.secondChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.secondChild().parent = root();
+                x.secondChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 2;
@@ -913,7 +1025,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.firstChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.firstChild().parent = root();
+                x.firstChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 2;
@@ -935,7 +1047,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.thirdChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.thirdChild().parent = root();
+                x.thirdChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 3;
@@ -957,7 +1069,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.secondChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.secondChild().parent = root();
+                x.secondChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 3;
@@ -981,7 +1093,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.firstChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.firstChild().parent = root();
+                x.firstChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 3;
@@ -1003,7 +1115,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.fourthChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.fourthChild().parent = root();
+                x.fourthChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 4;
@@ -1025,7 +1137,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.thirdChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.thirdChild().parent = root();
+                x.thirdChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 4;
@@ -1049,7 +1161,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.secondChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.secondChild().parent = root();
+                x.secondChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 4;
@@ -1075,7 +1187,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.firstChild = new TwoThreeNode();
 
                 // Sets the parent node of the new node
-                x.firstChild().parent = root();
+                x.firstChild().parent = x;
 
                 // Updates the number of children for x
                 x.numberChildren = 4;
@@ -1178,6 +1290,13 @@ public class TwoThreeTree<E extends Comparable<E>>
 
         // Creates an unsorted array list containing all the children of the parent (including the node to be deleted)
         ArrayList<TwoThreeNode> nodeToDeleteParentChildren = getChildrenList(nodeToDelete.parent(), false);
+
+        raiseSurplus(nodeToDelete.parent().parent().parent());
+        // Creates an unsorted array list containing all the siblings of the parent (including itself)
+        nodeToDeleteParentSiblings = getChildrenList(nodeToDelete.parent().parent(), false);
+
+        // Creates an unsorted array list containing all the children of the parent (including the node to be deleted)
+        nodeToDeleteParentChildren = getChildrenList(nodeToDelete.parent(), false);
 
         // Checks to see if the parent has 3 children
         if (nodeToDelete.parent().numberChildren() == 3)
@@ -1301,7 +1420,7 @@ public class TwoThreeTree<E extends Comparable<E>>
                             }
                         }
                         break;
-                        // Second child
+                    // Second child
                     case 1:
                         break;
                 }
