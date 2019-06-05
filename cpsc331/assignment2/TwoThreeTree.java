@@ -2,6 +2,8 @@ package cpsc331.assignment2;
 
 import cpsc331.collections.ElementFoundException;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 /**
@@ -437,49 +439,60 @@ public class TwoThreeTree<E extends Comparable<E>>
     // b) key is a non-null input with type E.
     //
     // Postcondition:
-    // a) Id the input key does not belong to the subset of E represented
+    // a) If the input key does not belong to the subset of E represented
     //    by T then they key is added to this subset - which is otherwise
     //    unchanged. If the key does already belong to this subset and an
     //    ElementFoundException is thrown and T is not changed.
     // b) T satisfies the 2-3 Tree properties given above.
     private void addSecondElement(E key) throws ElementFoundException
     {
-        // Creates two new nodes that will be used for the left and right subtree
-        root().firstChild = new TwoThreeNode();
-        root().secondChild = new TwoThreeNode();
-
-        // Sets the parent node of the left and right subtree to the root node
-        root().firstChild().parent = root();
-        root().secondChild().parent = root();
-
-        // Updates the number of children for the root node
-        root().numberChildren = 2;
-
-        // Checks to see if the passed in key is less than the current root value and will make the key the left subtree if it is
-        if (root().element().compareTo(key) < 0)
+        try
         {
-            // Stores the old root value in the left subtree and the passed in key value in the right subtree
-            root().firstChild().element = root().element();
-            root().secondChild().element = key;
-
-            // Stores the respective first and second max values
-            root().firstMax = root().element();
-            root().secondMax = key;
-        }
-        // The passed in key was greater than the current root value and makes the key the right subtree
-        else
+            // Searches the tree for the provided key's existence
+            if (search(key) != null)
+            {
+                // Throws an ElementFoundException since the search for the provided key was successful
+                throw new ElementFoundException("");
+            }
+        } catch (NoSuchElementException e)
         {
-            // Stores the old root value in the right subtree and the passed in key value in the left subtree
-            root().firstChild().element = key;
-            root().secondChild().element = root().element();
+            // Creates two new nodes that will be used for the left and right node
+            root().firstChild = new TwoThreeNode();
+            root().secondChild = new TwoThreeNode();
 
-            // Stores the respective first and second max values
-            root().firstMax = key;
-            root().secondMax = root().element();
+            // Sets the parent node of the left and right subtree to the root node
+            root().firstChild().parent = root();
+            root().secondChild().parent = root();
+
+            // Updates the number of children for the root node
+            root().numberChildren = 2;
+
+            // Checks to see if the passed in key is greater than the current root value (root().element < key) and will make the key the right subtree if it is
+            if (root().element().compareTo(key) < 0)
+            {
+                // Stores the old root value in the left subtree and the passed in key value in the right subtree
+                root().firstChild().element = root().element();
+                root().secondChild().element = key;
+
+                // Stores the respective first and second max values
+                root().firstMax = root().element();
+                root().secondMax = key;
+            }
+            // The passed in key was smaller than the current root value (root().element > key) and makes the key the left subtree
+            else
+            {
+                // Stores the old root value in the right subtree and the passed in key value in the left subtree
+                root().firstChild().element = key;
+                root().secondChild().element = root().element();
+
+                // Stores the respective first and second max values
+                root().firstMax = key;
+                root().secondMax = root().element();
+            }
+
+            // Sets the root node to null as it is no longer a leaf node (has 2 children)
+            root().element = null;
         }
-
-        // Sets the root node to null as it is no longer a leaf node (has 2 children)
-        root().element = null;
     }
 
     // Inserts a given key into the subtree of T with a given node x
@@ -508,32 +521,65 @@ public class TwoThreeTree<E extends Comparable<E>>
     //    - either T satisfies the 2-3 Tree properties, given above, or
     //      T satisfies the "Modified Tree" properties, given above, and
     //      x is now an internal node with four children.
-
-    // TODO
     private void insertIntoSubtree(E key, TwoThreeNode x) throws ElementFoundException, NoSuchElementException
     {
+        // Checks to see if the passed in node is a leaf
         if (x.numberChildren() == 0)
         {
+            // Stores the passed in node's element
             E e = x.element();
-            if (e.equals(key)) throw new ElementFoundException("");
-            else throw new NoSuchElementException();
+
+            // Checks to see if the passed in node's element is equal to the passed in key
+            if (e.equals(key))
+            {
+                // Throws an error since the key already exists in the current leaf
+                throw new ElementFoundException("");
+            } else
+            {
+                // Throws an error since the key does not already exist under the current node
+                throw new NoSuchElementException();
+            }
         } else
         {
             try
             {
+                // Checks to see if the passed in node has 2 children
                 if (x.numberChildren() == 2)
                 {
-                    if (key.compareTo(x.firstMax()) <= 0) insertIntoSubtree(key, x.firstChild());
-                    else insertIntoSubtree(key, x.secondChild());
+                    // Checks if the passed in key is less than or equal to the passed in node's firstMax (key <= x.firstMax)
+                    if (key.compareTo(x.firstMax()) <= 0)
+                    {
+                        // Recurse deeper into the first child's subtree
+                        insertIntoSubtree(key, x.firstChild());
+                    } else
+                    {
+                        // Recurse deeper into the second child's subtree since key > x.firstMax
+                        insertIntoSubtree(key, x.secondChild());
+                    }
                 } else
                 {
-                    if (key.compareTo(x.firstMax()) <= 0) insertIntoSubtree(key, x.firstChild());
-                    else if (key.compareTo(x.secondMax()) <= 0) insertIntoSubtree(key, x.secondChild());
-                    else insertIntoSubtree(key, x.thirdChild());
+                    // Checks if the passed in key is less than or equal to the passed in node's firstMax (key <= x.firstMax)
+                    if (key.compareTo(x.firstMax()) <= 0)
+                    {
+                        // Recurse deeper into the first child's subtree
+                        insertIntoSubtree(key, x.firstChild());
+                    }
+                    // Checks if the passed in key is less than or equal to the passed in node's secondMax (key <= x.secondMax)
+                    else if (key.compareTo(x.secondMax()) <= 0)
+                    {
+                        // Recurse deeper into the second child's subtree
+                        insertIntoSubtree(key, x.secondChild());
+                    } else
+                    {
+                        // Recurse deeper into the third child's subtree since key > x.secondMax
+                        insertIntoSubtree(key, x.thirdChild());
+                    }
                 }
+                // Calls the method to raise the surplus and handle nodes with 4 children that are not the root (moves them closer to the root)
                 raiseSurplus(x);
             } catch (NoSuchElementException ex)
             {
+                // Adds the passed in key as a leaf of the passed in node since it does not already exist
                 addLeaf(key, x);
             }
         }
@@ -554,8 +600,6 @@ public class TwoThreeTree<E extends Comparable<E>>
     // b) Either T is a 2-3 tree (that is, it satisfies the above "2-3 Tree"
     //    properties), or T satisfies the "Modified Tree" properties and x
     //    has four children.
-
-    // TODO
     private void raiseSurplus(TwoThreeNode x)
     {
         for (int counter = 1; counter <= x.numberChildren(); counter++)
@@ -763,8 +807,6 @@ public class TwoThreeTree<E extends Comparable<E>>
     //    leaves of T, which is otherwise unchanged.
     // b) Either T is a 2-3 Tree or T satisfies the above "Modified Tree"
     //    properties and x has four children.
-
-    // TODO
     private void addLeaf(E key, TwoThreeNode x)
     {
         // Checks to see if the passed in node has 0 children and adds the passed in key as a 1st child
@@ -785,10 +827,11 @@ public class TwoThreeTree<E extends Comparable<E>>
             // Stores the new 1st max in x
             x.firstMax = key;
         }
-        // Checks to see if the passed in node has 1 child and adds the passed in key as a 2nd child
+        // Checks to see if the passed in node has 1 child and adds the passed in key
         else if (x.numberChildren() == 1)
         {
-            if (x.firstChild().element().compareTo(key) < 0) // x1 < key
+            // Checks to see if the current first child is less than the key (x.firstChild < key)
+            if (x.firstChild().element().compareTo(key) < 0)
             {
                 // Creates a new node that will be the 2nd child of x
                 x.secondChild = new TwoThreeNode();
@@ -804,8 +847,11 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 2nd max in x
                 x.secondMax = key;
-            } else // x1 > key
+            }
+            // Code run if x.firstChild > key
+            else
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.secondChild = x.firstChild();
                 x.secondMax = x.firstMax();
 
@@ -825,10 +871,11 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.firstMax = key;
             }
         }
-        // Checks to see if the passed in node has 2 children and adds the passed in key as a 3rd child
+        // Checks to see if the passed in node has 2 children and adds the passed in key
         if (x.numberChildren() == 2)
         {
-            if (x.secondChild().element().compareTo(key) < 0) // x2 < key
+            // Checks to see if the current second child is less than the key (x.secondChild < key)
+            if (x.secondChild().element().compareTo(key) < 0)
             {
                 // Creates a new node that will be the 3rd child of x
                 x.thirdChild = new TwoThreeNode();
@@ -844,8 +891,11 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 3rd max in x
                 x.thirdMax = key;
-            } else if (x.firstChild().element().compareTo(key) < 0) // x1 < key
+            }
+            // Checks to see if the current first child is less than the key (x.firstChild < key)
+            else if (x.firstChild().element().compareTo(key) < 0)
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.thirdChild = x.secondChild();
                 x.thirdMax = x.secondMax();
 
@@ -863,11 +913,13 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 2nd max in x
                 x.secondMax = key;
-            } else // x1 > key
+            }
+            // Code run if x.firstChild > key
+            else
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.thirdChild = x.secondChild();
                 x.thirdMax = x.secondMax();
-
                 x.secondChild = x.firstChild();
                 x.secondMax = x.firstMax();
 
@@ -887,10 +939,11 @@ public class TwoThreeTree<E extends Comparable<E>>
                 x.firstMax = key;
             }
         }
-        // Checks to see if the passed in node has 3 children and adds the passed in key as a 4th child
+        // Checks to see if the passed in node has 3 children and adds the passed in key
         else if (x.numberChildren() == 3)
         {
-            if (x.thirdChild().element().compareTo(key) < 0) // x3 < key
+            // Checks to see if the current third child is less than the key (x.thirdChild < key)
+            if (x.thirdChild().element().compareTo(key) < 0)
             {
                 // Creates a new node that will be the 4th child of x
                 x.fourthChild = new TwoThreeNode();
@@ -906,8 +959,11 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 4th max in x
                 x.fourthMax = key;
-            } else if (x.secondChild().element().compareTo(key) < 0) // x2 < key
+            }
+            // Checks to see if the current second child is less than the key (x.secondChild < key)
+            else if (x.secondChild().element().compareTo(key) < 0)
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.fourthChild = x.thirdChild();
                 x.fourthMax = x.thirdMax();
 
@@ -925,11 +981,13 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 3rd max in x
                 x.thirdMax = key;
-            } else if (x.firstChild().element().compareTo(key) < 0) // x1 < key
+            }
+            // Checks to see if the current first child is less than the key (x.firstChild < key)
+            else if (x.firstChild().element().compareTo(key) < 0)
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.fourthChild = x.thirdChild();
                 x.fourthMax = x.thirdMax();
-
                 x.thirdChild = x.secondChild();
                 x.thirdMax = x.secondMax();
 
@@ -947,14 +1005,15 @@ public class TwoThreeTree<E extends Comparable<E>>
 
                 // Stores the new 2nd max in x
                 x.secondMax = key;
-            } else // x1 > key
+            }
+            // Code run if x.firstChild > key
+            else
             {
+                // Shifts the relevant existing nodes and max values to the right to accommodate for the new node on the left
                 x.fourthChild = x.thirdChild();
                 x.fourthMax = x.thirdMax();
-
                 x.thirdChild = x.secondChild();
                 x.thirdMax = x.secondMax();
-
                 x.secondChild = x.firstChild();
                 x.secondMax = x.firstMax();
 
@@ -976,6 +1035,58 @@ public class TwoThreeTree<E extends Comparable<E>>
         }
     }
 
+    // Method that will return an array list storing of all the children at the provided x node
+    private ArrayList getChildrenList(TwoThreeNode x, boolean sortList)
+    {
+        // Creates a new array list that will store all the nodes that will be handled
+        ArrayList<TwoThreeNode> childrenList = new ArrayList<>();
+
+        // Loops through all the children of the provided node x and stores them
+        for (int counter = 1; counter <= x.numberChildren(); counter++)
+        {
+            // Logs all the children based on which iteration the loop is currently on
+            switch (counter)
+            {
+                // First child
+                case 1:
+                    childrenList.add(x.firstChild());
+                    break;
+                // Second child
+                case 2:
+                    childrenList.add(x.secondChild());
+                    break;
+                // Third child
+                case 3:
+                    childrenList.add(x.thirdChild());
+                    break;
+                // Fourth child
+                case 4:
+                    childrenList.add(x.fourthChild());
+                    break;
+            }
+        }
+
+        // Checks to see if the sortList boolean is true
+        if (sortList)
+        {
+            // Sorts the array list in ascending order based on the node's element value
+            childrenList = sortList(childrenList);
+        }
+
+        // Returns the populated array list back to the calling code
+        return childrenList;
+    }
+
+    // Method that will sort a provided array list of nodes
+    private ArrayList sortList(ArrayList<TwoThreeNode> list)
+    {
+        // Sorts the provided array list in ascending order based on the node's element value
+        list.sort(Comparator.nullsLast(Comparator.comparing(TwoThreeNode::element)));
+
+        // Returns the sorted array list back to the calling code
+        return list;
+    }
+
     // Completes the restoration of a 2-3 tree after the
     // "insertIntoSubtree" method has applied and the root has four
     // children
@@ -987,20 +1098,22 @@ public class TwoThreeTree<E extends Comparable<E>>
     // Postcondition:
     // a) The subset of E represented by T has not been changed.
     // b) T now satisfies the "2-3 Tree" properties given above.
-
-    // TODO
     private void fixRoot()
     {
+        // Creates a new node that will be used for the root node
         TwoThreeNode newRootNode = new TwoThreeNode();
 
+        // Creates two new nodes that will be used for the left and right node
         newRootNode.firstChild = new TwoThreeNode();
         newRootNode.secondChild = new TwoThreeNode();
 
+        // Stores the old 4 children of root in their new spots
         newRootNode.firstChild().firstChild = root().firstChild();
         newRootNode.firstChild().secondChild = root().secondChild();
         newRootNode.secondChild().firstChild = root().thirdChild();
         newRootNode.secondChild().secondChild = root().fourthChild();
 
+        // Sets the parent nodes of the left and right subtrees
         newRootNode.firstChild().parent = newRootNode;
         newRootNode.secondChild().parent = newRootNode;
         newRootNode.firstChild().firstChild().parent = newRootNode.firstChild();
@@ -1008,18 +1121,22 @@ public class TwoThreeTree<E extends Comparable<E>>
         newRootNode.secondChild().firstChild().parent = newRootNode.secondChild();
         newRootNode.secondChild().secondChild().parent = newRootNode.secondChild();
 
+        // Updates the root's max values to reflect the new children
         newRootNode.firstMax = root().secondMax();
         newRootNode.secondMax = root().fourthMax();
 
+        // Updates the new internal nodes (children of root) max values to reflect the moved original children
         newRootNode.firstChild().firstMax = root().firstMax();
         newRootNode.firstChild().secondMax = root().secondMax();
         newRootNode.secondChild().firstMax = root().thirdMax();
         newRootNode.secondChild().secondMax = root().fourthMax();
 
+        // Updates the number of children under the root and new children of root
         newRootNode.numberChildren = 2;
         newRootNode.firstChild().numberChildren = 2;
         newRootNode.secondChild().numberChildren = 2;
 
+        // Updates the root node to reflect the changes made
         root = newRootNode;
     }
 
