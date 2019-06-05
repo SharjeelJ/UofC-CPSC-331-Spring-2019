@@ -1180,13 +1180,13 @@ public class TwoThreeTree<E extends Comparable<E>>
         ArrayList<TwoThreeNode> nodeToDeleteParentChildren = getChildrenList(nodeToDelete.parent(), false);
 
         // Checks to see if the parent has 3 children
-        if (nodeToDelete.parent().numberChildren() == 3) // 3 children, 1 going
+        if (nodeToDelete.parent().numberChildren() == 3)
         {
             // Calls the appropriate block of code depending on the position of the node to remove among other children
             switch (nodeToDeleteParentChildren.indexOf(nodeToDelete))
             {
                 // First child
-                case 1: // remove 1st, shift 2 L
+                case 1:
                     // Shifts the 2nd child to the 1st child
                     nodeToDelete.parent().firstChild = nodeToDelete.secondChild();
                     nodeToDelete.parent().firstMax = nodeToDelete.secondMax();
@@ -1242,7 +1242,6 @@ public class TwoThreeTree<E extends Comparable<E>>
                 {
                     deletionPossible = true;
                 }
-
             }
             // Catches the error thrown if there was no 3rd sibling
             catch (NullPointerException e)
@@ -1256,81 +1255,56 @@ public class TwoThreeTree<E extends Comparable<E>>
                 switch (nodeToDeleteParentChildren.indexOf(nodeToDelete))
                 {
                     // First child
-                    case 1:
-                        // Checks to see if the parent is the middle sibling of 3
-                        if (nodeToDeleteParentSiblings.indexOf(nodeToDelete.parent()) == 2) // middle node, first element
+                    case 0:
+                        // Checks to see if the parent is the middle sibling
+                        if (nodeToDeleteParentSiblings.indexOf(nodeToDelete.parent()) == 2)
                         {
-                            nodeToDelete.parent().parent().firstChild().thirdChild = nodeToDelete.secondChild();
-                            nodeToDelete.parent().parent().firstChild().thirdMax = nodeToDelete.secondMax();
-
-                            if (nodeToDeleteParentSiblings.size() == 3) // if 3 siblings, shift L
+                            // Checks to see if the left sibling can accommodate for the orphaned node
+                            if (nodeToDelete.parent().parent().firstChild().numberChildren() == 2)
                             {
+                                // Adopts the 2nd child of the middle sibling as the 3rd child of the 1st sibling
+                                nodeToDelete.parent().parent().firstChild().thirdChild = nodeToDelete.secondChild();
+                                nodeToDelete.parent().parent().firstChild().thirdMax = nodeToDelete.secondMax();
+
+                                // Shifts the 3rd sibling to now be the second sibling
                                 nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
                                 nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
                                 nodeToDelete.parent().parent().thirdChild = null;
                                 nodeToDelete.parent().parent().thirdMax = null;
-                            } else
-                            {
-                                nodeToDelete.parent().parent().secondChild = null;
-                                nodeToDelete.parent().parent().secondMax = null;
-                            }
-                            nodeToDelete.parent().parent().numberChildren = 2;
-                            nodeToDelete.parent().parent().firstChild().numberChildren = 3;
-                        } else if (nodeToDeleteParentSiblings.indexOf(nodeToDelete.parent()) == 3) // right node, 1st element
-                        {
-                            nodeToDelete.parent().parent().secondChild().thirdChild = nodeToDelete.secondChild();
-                            nodeToDelete.parent().parent().secondChild().thirdMax = nodeToDelete.secondMax();
 
-                            if (nodeToDeleteParentSiblings.size() == 3)
-                            {
-                                nodeToDelete.parent().parent().thirdChild = null;
-                                nodeToDelete.parent().parent().thirdMax = null;
-                            } else
-                            {
-                                nodeToDelete.parent().parent().thirdChild = null;
-                                nodeToDelete.parent().parent().thirdMax = null;
+                                // Updates the number of children for the parent of the removed parent (of the removed node) and for the adopting parent
+                                nodeToDelete.parent().parent().numberChildren = 2;
+                                nodeToDelete.parent().parent().firstChild().numberChildren = 3;
                             }
-                            nodeToDelete.parent().parent().numberChildren = 2;
-                            nodeToDelete.parent().parent().secondChild().numberChildren = 3;
-                        } else if (nodeToDeleteParentSiblings.indexOf(nodeToDelete.parent()) == 1) // left node, 1st element
-                        {
-                            nodeToDelete.parent().parent().secondChild().thirdChild = nodeToDelete.parent().parent().secondChild().secondChild();
-                            nodeToDelete.parent().parent().secondChild().thirdMax = nodeToDelete.parent().parent().secondChild().secondMax();
-                            nodeToDelete.parent().parent().secondChild().secondChild = nodeToDelete.parent().parent().secondChild().firstChild();
-                            nodeToDelete.parent().parent().secondChild().secondMax = nodeToDelete.parent().parent().secondChild().firstMax();
-                            nodeToDelete.parent().parent().secondChild().firstChild = nodeToDelete.secondChild();
-                            nodeToDelete.parent().parent().secondChild().firstMax = nodeToDelete.secondMax();
-
-                            if (nodeToDeleteParentSiblings.size() == 3)
+                            // Resorts to the right sibling to accommodate for the orphaned node
+                            else
                             {
-                                nodeToDelete.parent().parent().firstChild = nodeToDelete.parent().parent().secondChild();
-                                nodeToDelete.parent().parent().firstMax = nodeToDelete.parent().parent().secondMax();
+                                // Shifts the 2nd and 1st child of the 3rd sibling to the right to accommodate for the adopted 1st child
+                                nodeToDelete.parent().parent().thirdChild().thirdChild = nodeToDelete.parent().parent().thirdChild().secondChild();
+                                nodeToDelete.parent().parent().thirdChild().thirdMax = nodeToDelete.parent().parent().thirdChild().secondMax();
+                                nodeToDelete.parent().parent().thirdChild().secondChild = nodeToDelete.parent().parent().thirdChild().firstChild();
+                                nodeToDelete.parent().parent().thirdChild().secondMax = nodeToDelete.parent().parent().thirdChild().firstMax();
+
+                                // Adopts the 2nd child of the middle sibling as the 1st child of the 3rd sibling
+                                nodeToDelete.parent().parent().thirdChild().firstChild = nodeToDelete.secondChild();
+                                nodeToDelete.parent().parent().thirdChild().firstMax = nodeToDelete.secondMax();
+
+                                // Shifts the 3rd sibling to now be the second sibling
                                 nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
                                 nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
                                 nodeToDelete.parent().parent().thirdChild = null;
                                 nodeToDelete.parent().parent().thirdMax = null;
-                            } else
-                            {
-                                nodeToDelete.parent().parent().firstChild = nodeToDelete.parent().parent().secondChild();
-                                nodeToDelete.parent().parent().firstMax = nodeToDelete.parent().parent().secondMax();
-                                nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
-                                nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
-                                nodeToDelete.parent().parent().thirdChild = null;
-                                nodeToDelete.parent().parent().thirdMax = null;
+
+                                // Updates the number of children for the parent of the removed parent (of the removed node) and for the adopting parent
+                                nodeToDelete.parent().parent().numberChildren = 2;
+                                nodeToDelete.parent().parent().thirdChild().numberChildren = 3;
                             }
-                            nodeToDelete.parent().parent().firstChild().numberChildren = 3;
                         }
                         break;
-                    case 2:
-                        nodeToDelete.parent().parent().firstChild().thirdChild = nodeToDelete.secondChild();
-                        nodeToDelete.parent().parent().firstChild().thirdMax = nodeToDelete.secondMax();
-                        nodeToDelete.parent = null;
-                        nodeToDelete.parent().secondChild = null;
-                        nodeToDelete.parent().secondMax = null;
-                        nodeToDelete.parent().parent().firstChild().numberChildren = 3;
+                        // Second child
+                    case 1:
                         break;
                 }
-                nodeToDelete.parent().numberChildren = 2;
             }
         }
     }
