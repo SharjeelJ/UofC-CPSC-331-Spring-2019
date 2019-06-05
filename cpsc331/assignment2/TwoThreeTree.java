@@ -505,60 +505,131 @@ public class TwoThreeTree<E extends Comparable<E>>
     {
         for (int counter = 1; counter <= x.numberChildren(); counter++)
         {
-            TwoThreeNode problematicNode = null;
             switch (counter)
             {
                 case 1:
-                    if (x.firstChild().numberChildren() == 4) problematicNode = x.firstChild();
+                    if (x.firstChild().numberChildren() == 4)
+                    {
+                        TwoThreeNode newNode = new TwoThreeNode();
+
+                        newNode.firstChild = new TwoThreeNode();
+                        newNode.secondChild = new TwoThreeNode();
+                        newNode.thirdChild = x.secondChild();
+                        newNode.fourthChild = x.thirdChild();
+
+                        newNode.firstChild().firstChild = x.firstChild().firstChild();
+                        newNode.firstChild().secondChild = x.firstChild().secondChild();
+                        newNode.secondChild().firstChild = x.firstChild().thirdChild();
+                        newNode.secondChild().secondChild = x.firstChild().fourthChild();
+
+                        newNode.firstChild().parent = newNode;
+                        newNode.secondChild().parent = newNode;
+                        newNode.firstChild().firstChild().parent = newNode.firstChild();
+                        newNode.firstChild().secondChild().parent = newNode.firstChild();
+                        newNode.secondChild().firstChild().parent = newNode.secondChild();
+                        newNode.secondChild().secondChild().parent = newNode.secondChild();
+
+                        newNode.firstMax = x.firstChild.secondMax();
+                        newNode.secondMax = x.firstChild().fourthMax();
+                        newNode.thirdMax = x.secondMax();
+                        newNode.fourthMax = x.thirdMax();
+
+                        newNode.firstChild().firstMax = x.firstChild().firstMax();
+                        newNode.firstChild().secondMax = x.firstChild().secondMax();
+                        newNode.secondChild().firstMax = x.firstChild().thirdMax();
+                        newNode.secondChild().secondMax = x.firstChild().fourthMax();
+
+                        newNode.numberChildren = 4;
+                        newNode.firstChild().numberChildren = 2;
+                        newNode.secondChild().numberChildren = 2;
+
+                        newNode.parent = x.parent();
+
+                        x = newNode;
+                    }
                     break;
                 case 2:
-                    if (x.secondChild().numberChildren() == 4) problematicNode = x.secondChild();
+                    if (x.secondChild().numberChildren() == 4)
+                    {
+                        TwoThreeNode newNode = new TwoThreeNode();
+
+                        newNode.firstChild = x.firstChild();
+                        newNode.secondChild = new TwoThreeNode();
+                        newNode.thirdChild = new TwoThreeNode();
+                        newNode.fourthChild = x.thirdChild();
+
+                        newNode.secondChild().firstChild = x.secondChild().firstChild();
+                        newNode.secondChild().secondChild = x.secondChild().secondChild();
+                        newNode.thirdChild().firstChild = x.secondChild().thirdChild();
+                        newNode.thirdChild().secondChild = x.secondChild().fourthChild();
+
+                        newNode.secondChild().parent = newNode;
+                        newNode.thirdChild().parent = newNode;
+                        newNode.secondChild().firstChild().parent = newNode.secondChild();
+                        newNode.secondChild().secondChild().parent = newNode.secondChild();
+                        newNode.thirdChild().firstChild().parent = newNode.thirdChild();
+                        newNode.thirdChild().secondChild().parent = newNode.thirdChild();
+
+                        newNode.firstMax = x.firstMax();
+                        newNode.secondMax = x.secondChild().secondMax();
+                        newNode.thirdMax = x.secondChild().fourthMax();
+                        newNode.fourthMax = x.thirdMax();
+
+                        newNode.secondChild().firstMax = x.secondChild().firstMax();
+                        newNode.secondChild().secondMax = x.secondChild().secondMax();
+                        newNode.thirdChild().firstMax = x.secondChild().thirdMax();
+                        newNode.thirdChild().secondMax = x.secondChild().fourthMax();
+
+                        newNode.numberChildren = 4;
+                        newNode.secondChild().numberChildren = 2;
+                        newNode.thirdChild().numberChildren = 2;
+
+                        newNode.parent = x.parent();
+
+                        x = newNode;
+                    }
                     break;
                 case 3:
-                    if (x.thirdChild().numberChildren() == 4) problematicNode = x.thirdChild();
+                    if (x.thirdChild().numberChildren() == 4)
+                    {
+                        TwoThreeNode newNode = new TwoThreeNode();
+
+                        newNode.firstChild = x.firstChild();
+                        newNode.secondChild = x.secondChild();
+                        newNode.thirdChild = new TwoThreeNode();
+                        newNode.fourthChild = new TwoThreeNode();
+
+                        newNode.thirdChild().firstChild = x.thirdChild().firstChild();
+                        newNode.thirdChild().secondChild = x.thirdChild().secondChild();
+                        newNode.fourthChild().firstChild = x.thirdChild().thirdChild();
+                        newNode.fourthChild().secondChild = x.thirdChild().fourthChild();
+
+                        newNode.thirdChild().parent = newNode;
+                        newNode.fourthChild().parent = newNode;
+                        newNode.thirdChild().firstChild().parent = newNode.thirdChild();
+                        newNode.thirdChild().secondChild().parent = newNode.thirdChild();
+                        newNode.fourthChild().firstChild().parent = newNode.fourthChild();
+                        newNode.fourthChild().secondChild().parent = newNode.fourthChild();
+
+                        newNode.firstMax = x.firstMax();
+                        newNode.secondMax = x.secondMax();
+                        newNode.thirdMax = x.thirdChild().secondMax();
+                        newNode.fourthMax = x.thirdChild().fourthMax();
+
+                        newNode.thirdChild().firstMax = x.thirdChild().firstMax();
+                        newNode.thirdChild().secondMax = x.thirdChild().secondMax();
+                        newNode.fourthChild().firstMax = x.thirdChild().thirdMax();
+                        newNode.fourthChild().secondMax = x.thirdChild().fourthMax();
+
+                        newNode.numberChildren = 4;
+                        newNode.thirdChild().numberChildren = 2;
+                        newNode.fourthChild().numberChildren = 2;
+
+                        newNode.parent = x.parent();
+
+                        x = newNode;
+                    }
                     break;
-                case 4:
-                    if (x.fourthChild().numberChildren() == 4) problematicNode = x.fourthChild();
-                    break;
-            }
-            if (problematicNode != null)
-            {
-                TwoThreeNode newNode = new TwoThreeNode();
-
-                newNode.firstChild = x.firstChild();
-                newNode.secondChild = x.secondChild();
-                newNode.thirdChild = new TwoThreeNode();
-                newNode.fourthChild = new TwoThreeNode();
-
-                newNode.thirdChild().firstChild = problematicNode.firstChild();
-                newNode.thirdChild().secondChild = problematicNode.secondChild();
-                newNode.fourthChild().firstChild = problematicNode.thirdChild();
-                newNode.fourthChild().secondChild = problematicNode.fourthChild();
-
-                newNode.thirdChild().parent = newNode;
-                newNode.fourthChild().parent = newNode;
-                newNode.thirdChild().firstChild().parent = newNode.thirdChild();
-                newNode.thirdChild().secondChild().parent = newNode.thirdChild();
-                newNode.fourthChild().firstChild().parent = newNode.fourthChild();
-                newNode.fourthChild().secondChild().parent = newNode.fourthChild();
-
-                newNode.firstMax = x.firstMax();
-                newNode.secondMax = x.secondMax();
-                newNode.thirdMax = problematicNode.secondMax();
-                newNode.fourthMax = problematicNode.fourthMax();
-
-                newNode.thirdChild().firstMax = problematicNode.firstMax();
-                newNode.thirdChild().secondMax = problematicNode.secondMax();
-                newNode.fourthChild().firstMax = problematicNode.thirdMax();
-                newNode.fourthChild().secondMax = problematicNode.fourthMax();
-
-                newNode.numberChildren = 4;
-                newNode.thirdChild().numberChildren = 2;
-                newNode.fourthChild().numberChildren = 2;
-
-                newNode.parent = x.parent();
-
-                x = newNode;
             }
         }
     }
