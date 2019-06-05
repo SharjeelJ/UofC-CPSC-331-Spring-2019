@@ -1,3 +1,8 @@
+/*
+Martha Ibarra 30003129
+Sharjeel Junaid 30008424
+Dheeraj Kumar 30011439
+*/
 package cpsc331.assignment2;
 
 import cpsc331.collections.ElementFoundException;
@@ -1160,10 +1165,52 @@ public class TwoThreeTree<E extends Comparable<E>>
     //    being otherwise unchanged). A NoSuchElementException  is thrown
     //    and the set is not changed, if the key already belongs to
     //    this subset.
-    // b) T satisfies the 2-3 Tree oroperties given above.
+    // b) T satisfies the 2-3 Tree properties given above.
     public void delete(E key) throws NoSuchElementException
     {
-        // TODO
+        // Performs a search of the tree to see if the provided key exists (will throw NoSuchElementException if it doesnt exist) and stores the node
+        TwoThreeNode nodeToDelete = search(key);
+        //        System.out.println(nodeToDelete.element());
+        //        nodeToDelete.element = null;
+        //        nodeToDelete.parent().numberChildren--;
+        //        System.out.println(nodeToDelete.element());
+        removeLeaf(key, nodeToDelete);
+    }
+
+    private void removeLeaf(E key, TwoThreeNode x)
+    {
+        if (x.parent().numberChildren() == 1)
+        {
+            x.element = null;
+            x.parent = null;
+        } else if (x.parent().numberChildren() == 2)
+        {
+            if (x.parent().firstChild().element().equals(key))
+            {
+                x.parent().firstChild = x.parent().secondChild();
+                x.parent().firstMax = x.parent().secondMax();
+                x.parent().secondChild = null;
+                x.parent().secondMax = null;
+                x.parent().numberChildren = 1;
+            } else
+            {
+                x.parent().secondChild = null;
+                x.parent().secondMax = null;
+                x.parent().numberChildren = 1;
+            }
+        } else if (x.parent().numberChildren() == 3)
+        {
+            if (x.parent().firstChild().element().equals(key))
+            {
+                x.parent().firstChild = x.parent().secondChild();
+                x.parent().secondChild = x.parent().thirdChild();
+                x.firstMax = x.parent().secondMax();
+                x.secondMax = x.parent().thirdMax();
+                x.parent().thirdMax = null;
+                x.parent().thirdChild = null;
+                x.parent().numberChildren = 2;
+            }
+        }
     }
 
     // *****************************************************************
