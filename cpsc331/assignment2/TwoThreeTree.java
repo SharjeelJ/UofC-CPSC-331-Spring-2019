@@ -7,6 +7,9 @@ package cpsc331.assignment2;
 
 import cpsc331.collections.ElementFoundException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 /**
@@ -1170,47 +1173,182 @@ public class TwoThreeTree<E extends Comparable<E>>
     {
         // Performs a search of the tree to see if the provided key exists (will throw NoSuchElementException if it doesnt exist) and stores the node
         TwoThreeNode nodeToDelete = search(key);
-        //        System.out.println(nodeToDelete.element());
-        //        nodeToDelete.element = null;
-        //        nodeToDelete.parent().numberChildren--;
-        //        System.out.println(nodeToDelete.element());
-        removeLeaf(key, nodeToDelete);
+
+        ArrayList <TwoThreeNode> nodeToDeleteParentSiblings = getChildrenList(nodeToDelete.parent().parent(), false);
+        ArrayList <TwoThreeNode> nodeToDeleteParentChildren = getChildrenList(nodeToDelete.parent(), false);
+
+//        System.out.println("PRINT 1: " + siblings.indexOf(nodeToDelete.parent()));
+//        System.out.println("PRINT 2: " + children.indexOf(nodeToDelete));
+//
+//        System.out.println("Siblings List");
+//        for (int counter = 0; counter < siblings.size(); counter++)
+//            System.out.println("Element #" + (counter + 1) + ": " + siblings.get(counter).numberChildren());
+//
+//        System.out.println("Children List");
+//        for (int counter = 0; counter < children.size(); counter++)
+//            System.out.println("Element #" + (counter + 1) + ": " + children.get(counter).element());
+
+        if (nodeToDelete.parent().numberChildren() == 3) // 3 children, 1 going
+        {
+            switch (nodeToDeleteParentChildren.indexOf(nodeToDelete)) // location of node
+            {
+                case 1: // remove 1st, shift 2 L
+                    nodeToDelete.parent().firstChild = nodeToDelete.secondChild();
+                    nodeToDelete.parent().firstMax = nodeToDelete.secondMax();
+                    nodeToDelete.parent().secondChild = nodeToDelete.thirdChild();
+                    nodeToDelete.parent().secondMax = nodeToDelete.thirdMax();
+                    nodeToDelete.parent().thirdChild = null;
+                    nodeToDelete.parent().thirdMax = null;
+                    break;
+                case 2: // remove 2nd, shift 1 L
+                    nodeToDelete.parent().secondChild = nodeToDelete.thirdChild();
+                    nodeToDelete.parent().secondMax = nodeToDelete.thirdMax();
+                    nodeToDelete.parent().thirdChild = null;
+                    nodeToDelete.parent().thirdMax = null;
+                    break;
+                case 3: // remove 3rd, shift 0
+                    nodeToDelete.parent().thirdChild = null;
+                    nodeToDelete.parent().thirdMax = null;
+                    break;
+            }
+            nodeToDelete.parent().numberChildren = 2;
+        }
+        else if (nodeToDelete.parent().numberChildren() == 2) // 2 children, 1 going
+        {
+            switch (nodeToDeleteParentChildren.indexOf(nodeToDelete)) // location of the parent node
+            {
+                case 1:
+                    if (nodeToDeleteParentSiblings.indexOf(nodeToDelete.parent()) == 2) // middle node, first element
+                    {
+                        nodeToDelete.parent().parent().firstChild().thirdChild = nodeToDelete.secondChild();
+                        nodeToDelete.parent().parent().firstChild().thirdMax = nodeToDelete.secondMax();
+
+                        if (nodeToDeleteParentSiblings.size() == 3) // if 3 siblings, shift L
+                        {
+                            nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
+                            nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
+                            nodeToDelete.parent().parent().thirdChild = null;
+                            nodeToDelete.parent().parent().thirdMax = null;
+                        }
+                        else
+                        {
+                            nodeToDelete.parent().parent().secondChild = null;
+                            nodeToDelete.parent().parent().secondMax = null;
+                        }
+                        nodeToDelete.parent().parent().numberChildren = 2;
+                        nodeToDelete.parent().parent().firstChild().numberChildren = 3;
+                    }
+                    else if (siblings.indexOf(nodeToDelete.parent()) == 3) // right node, 1st element
+                    {
+                        nodeToDelete.parent().parent().secondChild().thirdChild = nodeToDelete.secondChild();
+                        nodeToDelete.parent().parent().secondChild().thirdMax = nodeToDelete.secondMax();
+
+                        if (siblings.size() == 3)
+                        {
+                            nodeToDelete.parent().parent().thirdChild = null;
+                            nodeToDelete.parent().parent().thirdMax = null;
+                        }
+                        else
+                        {
+                            nodeToDelete.parent().parent().thirdChild = null;
+                            nodeToDelete.parent().parent().thirdMax = null;
+                        }
+                        nodeToDelete.parent().parent().numberChildren = 2;
+                        nodeToDelete.parent().parent().secondChild().numberChildren = 3;
+                    }
+                    else if (siblings.indexOf(nodeToDelete.parent()) == 1) // left node, 1st element
+                    {
+                        nodeToDelete.parent().parent().secondChild().thirdChild = nodeToDelete.parent().parent().secondChild().secondChild();
+                        nodeToDelete.parent().parent().secondChild().thirdMax = nodeToDelete.parent().parent().secondChild().secondMax();
+                        nodeToDelete.parent().parent().secondChild().secondChild = nodeToDelete.parent().parent().secondChild().firstChild();
+                        nodeToDelete.parent().parent().secondChild().secondMax = nodeToDelete.parent().parent().secondChild().firstMax();
+                        nodeToDelete.parent().parent().secondChild().firstChild = nodeToDelete.secondChild();
+                        nodeToDelete.parent().parent().secondChild().firstMax = nodeToDelete.secondMax();
+
+                        if (siblings.size() == 3)
+                        {
+                            nodeToDelete.parent().parent().firstChild = nodeToDelete.parent().parent().secondChild();
+                            nodeToDelete.parent().parent().firstMax = nodeToDelete.parent().parent().secondMax();
+                            nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
+                            nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
+                            nodeToDelete.parent().parent().thirdChild = null;
+                            nodeToDelete.parent().parent().thirdMax = null;
+                        }
+                        else
+                        {
+                            nodeToDelete.parent().parent().firstChild = nodeToDelete.parent().parent().secondChild();
+                            nodeToDelete.parent().parent().firstMax = nodeToDelete.parent().parent().secondMax();
+                            nodeToDelete.parent().parent().secondChild = nodeToDelete.parent().parent().thirdChild();
+                            nodeToDelete.parent().parent().secondMax = nodeToDelete.parent().parent().thirdMax();
+                            nodeToDelete.parent().parent().thirdChild = null;
+                            nodeToDelete.parent().parent().thirdMax = null;
+                        }
+                        nodeToDelete.parent().parent().firstChild().numberChildren = 3;
+                    }
+                    break;
+                case 2:
+                    nodeToDelete.parent().parent().firstChild().thirdChild = nodeToDelete.secondChild();
+                    nodeToDelete.parent().parent().firstChild().thirdMax = nodeToDelete.secondMax();
+                    nodeToDelete.parent = null;
+                    nodeToDelete.parent().secondChild = null;
+                    nodeToDelete.parent().secondMax = null;
+                    nodeToDelete.parent().parent().firstChild().numberChildren = 3;
+                    break;
+            }
+            nodeToDelete.parent().numberChildren = 2;
+        }
     }
 
-    private void removeLeaf(E key, TwoThreeNode x)
+    // Method that will return an array list storing of all the children at the provided x node
+    private ArrayList getChildrenList(TwoThreeNode x, boolean sortList)
     {
-        if (x.parent().numberChildren() == 1)
+        // Creates a new array list that will store all the nodes that will be handled
+        ArrayList<TwoThreeNode> childrenList = new ArrayList<>();
+
+        // Loops through all the children of the provided node x and stores them
+        for (int counter = 1; counter <= x.numberChildren(); counter++)
         {
-            x.element = null;
-            x.parent = null;
-        } else if (x.parent().numberChildren() == 2)
-        {
-            if (x.parent().firstChild().element().equals(key))
+            // Logs all the children based on which iteration the loop is currently on
+            switch (counter)
             {
-                x.parent().firstChild = x.parent().secondChild();
-                x.parent().firstMax = x.parent().secondMax();
-                x.parent().secondChild = null;
-                x.parent().secondMax = null;
-                x.parent().numberChildren = 1;
-            } else
-            {
-                x.parent().secondChild = null;
-                x.parent().secondMax = null;
-                x.parent().numberChildren = 1;
-            }
-        } else if (x.parent().numberChildren() == 3)
-        {
-            if (x.parent().firstChild().element().equals(key))
-            {
-                x.parent().firstChild = x.parent().secondChild();
-                x.parent().secondChild = x.parent().thirdChild();
-                x.firstMax = x.parent().secondMax();
-                x.secondMax = x.parent().thirdMax();
-                x.parent().thirdMax = null;
-                x.parent().thirdChild = null;
-                x.parent().numberChildren = 2;
+                // First child
+                case 1:
+                    childrenList.add(x.firstChild());
+                    break;
+                // Second child
+                case 2:
+                    childrenList.add(x.secondChild());
+                    break;
+                // Third child
+                case 3:
+                    childrenList.add(x.thirdChild());
+                    break;
+                // Fourth child
+                case 4:
+                    childrenList.add(x.fourthChild());
+                    break;
             }
         }
+
+        // Checks to see if the sortList boolean is true
+        if (sortList)
+        {
+            // Sorts the array list in ascending order based on the node's element value
+            childrenList = sortList(childrenList);
+        }
+
+        // Returns the populated array list back to the calling code
+        return childrenList;
+    }
+
+    // Method that will sort a provided array list of nodes
+    private ArrayList sortList(ArrayList<TwoThreeNode> list)
+    {
+        // Sorts the provided array list in ascending order based on the node's element value
+        list.sort(Comparator.nullsLast(Comparator.comparing(TwoThreeNode::element)));
+
+        // Returns the sorted array list back to the calling code
+        return list;
     }
 
     // *****************************************************************
